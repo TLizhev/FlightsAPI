@@ -1,6 +1,5 @@
 using FlightsAPI.Data;
 using FlightsAPI.Services;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +11,7 @@ builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IFlightsService, FlightsService>();
+builder.Services.AddScoped<ILuggageService, LuggageService>();
 
 var app = builder.Build();
 
