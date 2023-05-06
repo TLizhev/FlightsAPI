@@ -19,5 +19,11 @@ namespace FlightsAPI.Data
         public DbSet<Passenger> Passengers { get; set; }
         public DbSet<Plane> Planes { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(
+                "Server=.;Database=Airport;Trusted_Connection=True;MultipleActiveResultSets=true");
+        }
     }
 }
