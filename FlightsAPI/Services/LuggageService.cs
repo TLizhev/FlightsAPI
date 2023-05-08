@@ -19,7 +19,7 @@ namespace FlightsAPI.Services
 
         public Luggage GetLuggage(int id)
         {
-            return db.Luggages.FirstOrDefault(x => x.Id == id);
+            return db.Luggages.FirstOrDefault(x => x.Id == id)!;
         }
     }
 }

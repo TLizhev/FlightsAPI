@@ -19,7 +19,7 @@ namespace FlightsAPI.Services
 
         public Passenger GetPassenger(int id)
         {
-            return _db.Passengers.FirstOrDefault(x => x.Id == id);
+            return _db.Passengers.FirstOrDefault(x => x.Id == id)!;
         }
     }
 }

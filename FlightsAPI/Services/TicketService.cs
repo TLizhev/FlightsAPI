@@ -19,7 +19,7 @@ namespace FlightsAPI.Services
 
         public Ticket GetTicket(int id)
         {
-            return _db.Tickets.FirstOrDefault(x =>x.Id == id);
+            return _db.Tickets.FirstOrDefault(x =>x.Id == id)!;
         }
     }
 }

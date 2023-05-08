@@ -19,7 +19,7 @@ namespace FlightsAPI.Services
 
         public Plane GetPlane(int id)
         {
-            return _db.Planes.FirstOrDefault(x => x.Id == id);
+            return _db.Planes.FirstOrDefault(x => x.Id == id)!;
         }
     }
 }
