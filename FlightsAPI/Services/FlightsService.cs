@@ -5,21 +5,21 @@ namespace FlightsAPI.Services
 {
     public class FlightsService : IFlightsService
     {
-        private readonly ApplicationDbContext db;
+        private readonly ApplicationDbContext _db;
 
         public FlightsService(ApplicationDbContext db)
         {
-            this.db = db;
+            this._db = db;
         }
 
         public Flight GetFlight(int id)
         {
-            return db.Flights.FirstOrDefault(x => x.Id == id);
+            return _db.Flights.FirstOrDefault(x => x.Id == id);
         }
 
         public List<Flight> GetFlights()
         {
-            return db.Flights.ToList();
+            return _db.Flights.ToList();
         }
     }
 }

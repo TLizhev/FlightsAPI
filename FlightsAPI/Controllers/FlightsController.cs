@@ -22,7 +22,7 @@ namespace FlightsAPI.Controllers
         } 
         
         [HttpGet]
-        [Route("/api/flights/{id}")]
+        [Route("{id:int}")]
         public Flight GetFlight(int id)
         {
            return _flightService.GetFlight(id);

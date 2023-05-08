@@ -22,7 +22,7 @@ namespace FlightsAPI.Controllers
         }
         
         [HttpGet]
-        [Route("{id}")]
+        [Route("{id:int}")]
         public Luggage GetLuggage(int id)
         {
             return _luggageService.GetLuggage(id);
