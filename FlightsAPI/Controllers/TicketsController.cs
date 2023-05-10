@@ -23,9 +23,16 @@ namespace FlightsAPI.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        public Ticket GeTicket(int id)
+        public Ticket GetTicket(int id)
         {
             return _ticketService.GetTicket(id);
+        }
+
+        [HttpGet]
+        [Route("FF")]
+        public List<FrequentFliersDto> GetFrequentFliers()
+        {
+            return _ticketService.FrequentFliers();
         }
     }
 }

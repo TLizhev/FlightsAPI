@@ -6,5 +6,6 @@ namespace FlightsAPI.Services
     {
         public List<Ticket> GetTickets();
         public Ticket GetTicket(int id);
+        public List<FrequentFliersDto> FrequentFliers();
     }
 }

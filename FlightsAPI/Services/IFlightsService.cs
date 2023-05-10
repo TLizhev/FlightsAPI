@@ -7,5 +7,7 @@ namespace FlightsAPI.Services
         List<Flight> GetFlights();
 
         Flight GetFlight(int id);
+
+        List<Flight> GetTopFiveFlights();
     }
 }

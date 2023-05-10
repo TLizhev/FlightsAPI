@@ -27,5 +27,12 @@ namespace FlightsAPI.Controllers
         {
            return _flightService.GetFlight(id);
         }
+
+        [HttpGet]
+        [Route("/top")]
+        public List<Flight> GetTop5Flights()
+        {
+            return _flightService.GetTopFiveFlights();
+        }
     }
 }
