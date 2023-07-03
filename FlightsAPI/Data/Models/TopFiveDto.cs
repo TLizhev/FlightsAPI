@@ -2,7 +2,7 @@
 {
     public class TopFiveDto
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
         public int Number { get; set; }
     }
 }
