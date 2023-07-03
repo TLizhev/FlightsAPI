@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using FlightsAPI.Data;
+﻿using FlightsAPI.Data;
 using FlightsAPI.Data.Models;
 
 namespace FlightsAPI.Services
@@ -18,22 +17,58 @@ namespace FlightsAPI.Services
             return _db.Flights.FirstOrDefault(x => x.Id == id)!;
         }
 
-        public List<Flight> GetTopFiveFlights()
-        {
-            var stuff = _db.Flights.Select(x => x.Destination).ToList();
-            var stuff1 = _db.Flights.Select(x => x.Origin).ToList();
-            var dist = stuff.Distinct().ToList();
-            var dist1 = stuff1.Distinct().ToList();
-            var filter =
-                stuff.GroupBy(x => x)
-                    .ToDictionary(x => x.Key, x => x.Select(y => y)
-                        .Count());
-            return new();
-        }
-
         public List<Flight> GetFlights()
         {
             return _db.Flights.ToList();
+        }
+
+        public List<TopFiveDto> GetTopFiveFlightOrigins()
+        {
+            var origins = _db.Flights.Select(x => x.Origin).ToList();
+
+            var flights = GetTopFiveFlights(origins);
+
+            return flights;
+        }
+        public List<TopFiveDto> GetTopFiveFlights(string direction)
+        {
+            return direction switch
+            {
+                "origin" => GetTopFiveFlightOrigins(),
+                "destination" => GetTopFiveFlightDestinations(),
+                _ => throw new ArgumentException("Please select origin or destination.")
+            };
+        }
+
+        public List<TopFiveDto> GetTopFiveFlightDestinations()
+        {
+            var destinations = _db.Flights.Select(x => x.Destination).ToList();
+
+            var flights = GetTopFiveFlights(destinations);
+
+            return flights;
+        }
+
+        private List<TopFiveDto> GetTopFiveFlights(List<string> flightList)
+        {
+            var result = new List<TopFiveDto>();
+
+            var flights =
+                flightList.GroupBy(x => x)
+                    .ToDictionary(x => x.Key, x => x.Select(y => y)
+                        .Count()).OrderByDescending(x => x.Value).Take(5).ToDictionary(x=>x.Key, x=>x.Value);
+
+            foreach (var flight in flights)
+            {
+                var dto = new TopFiveDto
+                {
+                    Name = flight.Key,
+                    Number = flight.Value,
+                };
+                result.Add(dto);
+            }
+
+            return result;
         }
     }
 }

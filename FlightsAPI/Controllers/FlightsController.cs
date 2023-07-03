@@ -30,9 +30,9 @@ namespace FlightsAPI.Controllers
 
         [HttpGet]
         [Route("/top")]
-        public List<Flight> GetTop5Flights()
+        public List<TopFiveDto> GetTop5Flights(string direction)
         {
-            return _flightService.GetTopFiveFlights();
+            return _flightService.GetTopFiveFlights(direction);
         }
     }
 }

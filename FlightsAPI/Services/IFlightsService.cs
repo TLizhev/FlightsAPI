@@ -5,9 +5,9 @@ namespace FlightsAPI.Services
     public interface IFlightsService
     {
         List<Flight> GetFlights();
-
         Flight GetFlight(int id);
-
-        List<Flight> GetTopFiveFlights();
+        List<TopFiveDto> GetTopFiveFlightOrigins();
+        List<TopFiveDto> GetTopFiveFlightDestinations();
+        List<TopFiveDto> GetTopFiveFlights(string direction);
     }
 }
