@@ -27,5 +27,12 @@ namespace FlightsAPI.Controllers
         {
             return _luggageService.GetLuggage(id);
         }
+
+        [HttpGet]
+        [Route("/popular")]
+        public Luggage GetPopularLuggage()
+        {
+            return _luggageService.GetMostPopularLuggage();
+        }
     }
 }

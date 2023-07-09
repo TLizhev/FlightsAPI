@@ -6,5 +6,6 @@ namespace FlightsAPI.Services
     {
         List<Luggage> GetLuggages();
         Luggage GetLuggage(int id);
+        Luggage GetMostPopularLuggage();
     }
 }
