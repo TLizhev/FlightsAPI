@@ -30,7 +30,7 @@ namespace FlightsAPI.Controllers
 
         [HttpGet]
         [Route("/popular")]
-        public Luggage GetPopularLuggage()
+        public LuggageType GetPopularLuggage()
         {
             return _luggageService.GetMostPopularLuggage();
         }

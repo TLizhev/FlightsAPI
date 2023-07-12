@@ -22,12 +22,19 @@ namespace FlightsAPI.Services
             return _db.Luggages.FirstOrDefault(x => x.Id == id)!;
         }
 
-        public Luggage GetMostPopularLuggage()
+        public LuggageType GetMostPopularLuggage()
         {
-            var luggageTypes = _db.Luggages.GroupBy(x => x.LuggageTypeId)
+            var luggageTypes = _db.Luggages.Select(x => x.LuggageTypeId).ToList();
+
+            var result = luggageTypes.GroupBy(x => x)
                 .ToDictionary(x => x.Key, x => x.Select(y => y)
-                    .Count());
-            return _db.Luggages.FirstOrDefault(x => x.LuggageTypeId == luggageTypes.First().Key)!;
+                    .Count()).MaxBy(x => x.Value);
+
+            return new LuggageType()
+            {
+                Id = result.Key,
+                Type = _db.LuggageTypes.First(x => x.Id == result.Key).Type
+            };
         }
     }
 }

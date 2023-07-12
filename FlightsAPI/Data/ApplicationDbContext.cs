@@ -15,7 +15,7 @@ namespace FlightsAPI.Data
 
         public DbSet<Flight> Flights { get; set; } = null!;
         public DbSet<Luggage> Luggages { get; set; } = null!;
-        public DbSet<LuggageType> LuggagesTypes { get; set; } = null!;
+        public DbSet<LuggageType> LuggageTypes { get; set; } = null!;
         public DbSet<Passenger> Passengers { get; set; } = null!;
         public DbSet<Plane> Planes { get; set; } = null!;
         public DbSet<Ticket> Tickets { get; set; } = null!;
