@@ -21,5 +21,15 @@ namespace FlightsAPI.Services
         {
             return _db.Planes.FirstOrDefault(x => x.Id == id)!;
         }
+
+        public Plane GetMostSeats()
+        {
+            return _db.Planes.ToList().MaxBy(x => x.Seats)!;
+        }
+
+        public Plane GetBiggestRange()
+        {
+            return _db.Planes.ToList().MaxBy(x => x.Range)!;
+        }
     }
 }

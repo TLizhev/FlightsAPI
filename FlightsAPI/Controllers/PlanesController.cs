@@ -27,5 +27,19 @@ namespace FlightsAPI.Controllers
         {
             return _planeService.GetPlane(id);
         }
+
+        [HttpGet]
+        [Route("seats")]
+        public Plane GetMostSeats()
+        {
+            return _planeService.GetMostSeats();
+        } 
+
+        [HttpGet]
+        [Route("range")]
+        public Plane GetMostRange()
+        {
+            return _planeService.GetBiggestRange();
+        }
     }
 }

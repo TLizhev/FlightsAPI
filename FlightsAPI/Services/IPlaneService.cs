@@ -6,5 +6,7 @@ namespace FlightsAPI.Services
     {
         List<Plane> GetPlanes();
         Plane GetPlane(int id);
+        Plane GetMostSeats();
+        Plane GetBiggestRange();
     }
 }
