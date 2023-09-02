@@ -34,5 +34,16 @@ namespace FlightsAPI.Controllers
         {
             return _flightService.GetTopFiveFlights(direction);
         }
+
+        [HttpGet]
+        [Route("/add")]
+        public async Task AddFlight(string origin,
+            string destination,
+            DateTime? departureTime,
+            DateTime? arrivalTime,
+            int planeId)
+        {
+            await _flightService.AddFlight(arrivalTime, departureTime, origin, destination, planeId);
+        }
     }
 }

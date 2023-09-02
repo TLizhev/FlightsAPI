@@ -1,4 +1,5 @@
 ﻿using FlightsAPI.Data.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsAPI.Services
 {
@@ -9,5 +10,10 @@ namespace FlightsAPI.Services
         List<TopFiveDto> GetTopFiveFlightOrigins();
         List<TopFiveDto> GetTopFiveFlightDestinations();
         List<TopFiveDto> GetTopFiveFlights(string direction);
+        Task<IActionResult> AddFlight(DateTime? arrivalTime,
+            DateTime? departureTime,
+            string origin,
+            string destination,
+            int planeId);
     }
 }

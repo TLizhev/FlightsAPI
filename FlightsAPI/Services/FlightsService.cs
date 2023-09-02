@@ -1,5 +1,7 @@
-﻿using FlightsAPI.Data;
+﻿using System.Net;
+using FlightsAPI.Data;
 using FlightsAPI.Data.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsAPI.Services
 {
@@ -38,6 +40,27 @@ namespace FlightsAPI.Services
                 "destination" => GetTopFiveFlightDestinations(),
                 _ => throw new ArgumentException("Please select origin or destination.")
             };
+        }
+
+        public async Task<IActionResult> AddFlight(DateTime? arrivalTime,
+            DateTime? departureTime,
+            string origin,
+            string destination,
+            int planeId)
+        {
+            var flight = new Flight
+            {
+                DepartureTime = departureTime,
+                ArrivalTime = arrivalTime,
+                Origin = origin,
+                Destination = destination,
+                PlaneId = planeId
+            };
+
+            if (_db.Flights.Contains(flight)) return new BadRequestResult();
+            _db.Flights.Add(flight);
+            await _db.SaveChangesAsync();
+            return new OkResult();
         }
 
         public List<TopFiveDto> GetTopFiveFlightDestinations()
