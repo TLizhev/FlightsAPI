@@ -63,6 +63,45 @@ namespace FlightsAPI.Services
             return new OkResult();
         }
 
+        public async Task<IActionResult> EditFlight(int id,
+            DateTime? arrivalTime,
+            DateTime? departureTime,
+            string origin,
+            string destination,
+            int planeId)
+        {
+            var flights = _db.Flights;
+            var flight = flights.FirstOrDefault(x => x.Id == id);
+
+            if (!flights.Contains(flights.FirstOrDefault(x => x.Id == id))) return new BadRequestResult();
+
+            if (flight != null)
+            {
+                flight.Id = id;
+                flight.DepartureTime = departureTime;
+                flight.ArrivalTime = arrivalTime;
+                flight.Origin = origin;
+                flight.Destination = destination;
+                flight.PlaneId = planeId;
+
+                _db.Flights.Update(flight);
+            }
+
+            await _db.SaveChangesAsync();
+            return new OkResult();
+        }
+
+        public async Task<IActionResult> DeleteFlight(int id)
+        {
+            var flights = _db.Flights;
+            var flight = flights.FirstOrDefault(x => x.Id == id);
+            if (flight is null)
+                return new BadRequestResult();
+            flights.Remove(flight);
+            await _db.SaveChangesAsync();
+            return new OkResult();
+        }
+
         public List<TopFiveDto> GetTopFiveFlightDestinations()
         {
             var destinations = _db.Flights.Select(x => x.Destination).ToList();
@@ -79,7 +118,7 @@ namespace FlightsAPI.Services
             var flights =
                 flightList.GroupBy(x => x)
                     .ToDictionary(x => x.Key, x => x.Select(y => y)
-                        .Count()).OrderByDescending(x => x.Value).Take(5).ToDictionary(x=>x.Key, x=>x.Value);
+                        .Count()).OrderByDescending(x => x.Value).Take(5).ToDictionary(x => x.Key, x => x.Value);
 
             foreach (var flight in flights)
             {

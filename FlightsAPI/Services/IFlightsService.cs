@@ -15,5 +15,13 @@ namespace FlightsAPI.Services
             string origin,
             string destination,
             int planeId);
+
+        Task<IActionResult> EditFlight(int id, DateTime? arrivalTime,
+            DateTime? departureTime,
+            string origin,
+            string destination,
+            int planeId);
+
+        Task<IActionResult> DeleteFlight(int id);
     }
 }
