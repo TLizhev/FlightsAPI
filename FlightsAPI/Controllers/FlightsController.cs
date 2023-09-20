@@ -1,11 +1,12 @@
-﻿using FlightsAPI.Data.Models;
+﻿using FlightsAPI.Data;
+using FlightsAPI.Data.Models;
 using FlightsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsAPI.Controllers
 {
     [ApiController]
-    [Route("/api/flights")]
+    [Route(Endpoints.BaseFlightsEndpoint)]
     public class FlightsController : ControllerBase
     {
         private readonly IFlightsService _flightService;
@@ -29,26 +30,26 @@ namespace FlightsAPI.Controllers
         }
 
         [HttpGet]
-        [Route("/top")]
+        [Route(Endpoints.TopFlights)]
         public List<TopFiveDto> GetTop5Flights(string direction)
         {
             return _flightService.GetTopFiveFlights(direction);
         }
 
         [HttpPost]
-        [Route("/add")]
-        public async Task AddFlight(string origin,
+        [Route(Endpoints.AddFlight)]
+        public async Task<IActionResult> AddFlight(string origin,
             string destination,
             DateTime? departureTime,
             DateTime? arrivalTime,
             int planeId)
         {
-            await _flightService.AddFlight(arrivalTime, departureTime, origin, destination, planeId);
+           return await _flightService.AddFlight(arrivalTime, departureTime, origin, destination, planeId);
         }
 
         [HttpPatch]
-        [Route("/edit")]
-        public async Task EditFlight(int id, 
+        [Route(Endpoints.PatchFlight)]
+        public async Task PatchFlight(int id, 
             string origin,
             string destination,
             DateTime? departureTime,
@@ -59,10 +60,10 @@ namespace FlightsAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("/delete")]
-        public async Task DeleteFlight(int id)
+        [Route(Endpoints.DeleteFlight)]
+        public async Task<IActionResult> DeleteFlight(int id)
         {
-            await _flightService.DeleteFlight(id);
+           return await _flightService.DeleteFlight(id);
         }
     }
 }

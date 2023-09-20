@@ -1,5 +1,4 @@
-﻿using System.Net;
-using FlightsAPI.Data;
+﻿using FlightsAPI.Data;
 using FlightsAPI.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -96,7 +95,7 @@ namespace FlightsAPI.Services
             var flights = _db.Flights;
             var flight = flights.FirstOrDefault(x => x.Id == id);
             if (flight is null)
-                return new BadRequestResult();
+                return new NotFoundResult();
             flights.Remove(flight);
             await _db.SaveChangesAsync();
             return new OkResult();
