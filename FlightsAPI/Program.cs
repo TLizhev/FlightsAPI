@@ -15,6 +15,7 @@ builder.Services.AddScoped<ILuggageService, LuggageService>();
 builder.Services.AddScoped<IPassengerService, PassengerService>();
 builder.Services.AddScoped<IPlaneService, PlaneService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<IDiscountService, DiscountService>();
 
 var app = builder.Build();
 
