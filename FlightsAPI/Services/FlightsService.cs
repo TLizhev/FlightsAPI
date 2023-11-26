@@ -1,31 +1,32 @@
 ﻿using FlightsAPI.Data;
 using FlightsAPI.Data.Models;
+using FlightsAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsAPI.Services
 {
     public class FlightsService : IFlightsService
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IFlightRepository _flightRepository;
 
-        public FlightsService(ApplicationDbContext db)
+        public FlightsService(IFlightRepository flightRepository)
         {
-            this._db = db;
+            _flightRepository = flightRepository;
         }
 
         public Flight GetFlight(int id)
         {
-            return _db.Flights.FirstOrDefault(x => x.Id == id)!;
+            return _flightRepository.GetById(id);
         }
 
         public List<Flight> GetFlights()
         {
-            return _db.Flights.ToList();
+            return _flightRepository.GetAll();
         }
 
         public List<TopFiveDto> GetTopFiveFlightOrigins()
         {
-            var origins = _db.Flights.Select(x => x.Origin).ToList();
+            var origins = _flightRepository.GetAll().Select(x => x.Origin).ToList();
 
             var flights = GetTopFiveFlights(origins);
 
@@ -56,9 +57,8 @@ namespace FlightsAPI.Services
                 PlaneId = planeId
             };
 
-            if (_db.Flights.Contains(flight)) return new BadRequestResult();
-            _db.Flights.Add(flight);
-            await _db.SaveChangesAsync();
+            if (_flightRepository.GetAll().Contains(flight)) return new BadRequestResult();
+            _flightRepository.Add(flight);
             return new OkResult();
         }
 
@@ -69,10 +69,11 @@ namespace FlightsAPI.Services
             string destination,
             int planeId)
         {
-            var flights = _db.Flights;
+            var flights = _flightRepository.GetAll();
             var flight = flights.FirstOrDefault(x => x.Id == id);
 
-            if (!flights.Contains(flights.FirstOrDefault(x => x.Id == id))) return new BadRequestResult();
+            if (!flights.Contains(flights.FirstOrDefault(x => x.Id == id)!)) 
+                return new BadRequestResult();
 
             if (flight != null)
             {
@@ -83,34 +84,33 @@ namespace FlightsAPI.Services
                 flight.Destination = destination;
                 flight.PlaneId = planeId;
 
-                _db.Flights.Update(flight);
+                _flightRepository.Update(flight);
             }
 
-            await _db.SaveChangesAsync();
             return new OkResult();
         }
 
         public async Task<IActionResult> DeleteFlight(int id)
         {
-            var flights = _db.Flights;
+            var flights = _flightRepository.GetAll();
             var flight = flights.FirstOrDefault(x => x.Id == id);
             if (flight is null)
                 return new NotFoundResult();
             flights.Remove(flight);
-            await _db.SaveChangesAsync();
+
             return new OkResult();
         }
 
         public List<TopFiveDto> GetTopFiveFlightDestinations()
         {
-            var destinations = _db.Flights.Select(x => x.Destination).ToList();
+            var destinations = _flightRepository.GetAll().Select(x => x.Destination).ToList();
 
             var flights = GetTopFiveFlights(destinations);
 
             return flights;
         }
 
-        private List<TopFiveDto> GetTopFiveFlights(List<string> flightList)
+        private static List<TopFiveDto> GetTopFiveFlights(List<string> flightList)
         {
             var result = new List<TopFiveDto>();
 
