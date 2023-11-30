@@ -1,30 +1,31 @@
-﻿using FlightsAPI.Data;
-using FlightsAPI.Data.Models;
+﻿using FlightsAPI.Data.Models;
+using FlightsAPI.Repositories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsAPI.Services
 {
     public class LuggageService : ILuggageService
     {
-        private readonly ApplicationDbContext _db;
+        private readonly ILuggageRepository _luggageRepository;
 
-        public LuggageService(ApplicationDbContext db)
+        public LuggageService(ILuggageRepository luggageRepository)
         {
-            _db = db;
+            _luggageRepository = luggageRepository;
         }
 
         public List<Luggage> GetLuggages()
         {
-            return _db.Luggages.ToList();
+            return _luggageRepository.GetAll();
         }
 
         public Luggage GetLuggage(int id)
         {
-            return _db.Luggages.FirstOrDefault(x => x.Id == id)!;
+            return _luggageRepository.GetById(id);
         }
 
         public LuggageType GetMostPopularLuggage()
         {
-            var luggageTypes = _db.Luggages.Select(x => x.LuggageTypeId).ToList();
+            var luggageTypes = _luggageRepository.GetAll().Select(x => x.LuggageTypeId).ToList();
 
             var result = luggageTypes.GroupBy(x => x)
                 .ToDictionary(x => x.Key, x => x.Select(y => y)
@@ -33,8 +34,27 @@ namespace FlightsAPI.Services
             return new LuggageType()
             {
                 Id = result.Key,
-                Type = _db.LuggageTypes.First(x => x.Id == result.Key).Type
+                Type = _luggageRepository.GetLuggageTypes().First(x => x.Id == result.Key).Type
             };
+        }
+
+        public IActionResult UpdateLuggage(int id, int luggageTypeId, int passengerId)
+        {
+            var luggage = new Luggage
+            {
+                Id = id,
+                LuggageTypeId = luggageTypeId,
+                PassengerId = passengerId
+            };
+
+            _luggageRepository.Update(luggage);
+            return new OkResult();
+        }
+
+        public IActionResult DeleteLuggage(int id)
+        {
+            _luggageRepository.Delete(id);
+            return new OkResult();
         }
     }
 }

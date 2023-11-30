@@ -34,5 +34,19 @@ namespace FlightsAPI.Controllers
         {
             return _luggageService.GetMostPopularLuggage();
         }
+
+        [HttpPatch]
+        [Route("/editLuggage")]
+        public IActionResult EditLuggage(int id, int luggageTypeId, int passengerId)
+        {
+            return _luggageService.UpdateLuggage(id, luggageTypeId, passengerId);
+        }
+
+        [HttpDelete]
+        [Route("/deleteLuggage")]
+        public IActionResult DeleteLuggage(int id)
+        {
+            return _luggageService.DeleteLuggage(id);
+        }
     }
 }
