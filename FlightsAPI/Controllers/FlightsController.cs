@@ -19,14 +19,14 @@ namespace FlightsAPI.Controllers
         [HttpGet]
         public List<Flight> GetFlights()
         {
-           return _flightService.GetFlights();
-        } 
-        
+            return _flightService.GetFlights();
+        }
+
         [HttpGet]
         [Route("{id:int}")]
         public Flight GetFlight(int id)
         {
-           return _flightService.GetFlight(id);
+            return _flightService.GetFlight(id);
         }
 
         [HttpGet]
@@ -44,26 +44,26 @@ namespace FlightsAPI.Controllers
             DateTime? arrivalTime,
             int planeId)
         {
-           return await _flightService.AddFlight(arrivalTime, departureTime, origin, destination, planeId);
+            return await _flightService.AddFlight(arrivalTime, departureTime, origin, destination, planeId);
         }
 
         [HttpPatch]
         [Route(Endpoints.PatchFlight)]
-        public async Task PatchFlight(int id, 
+        public IActionResult PatchFlight(int id,
             string origin,
             string destination,
             DateTime? departureTime,
             DateTime? arrivalTime,
             int planeId)
         {
-            await _flightService.EditFlight(id,arrivalTime, departureTime, origin, destination, planeId);
+            return _flightService.EditFlight(id, arrivalTime, departureTime, origin, destination, planeId);
         }
 
         [HttpDelete]
         [Route(Endpoints.DeleteFlight)]
-        public async Task<IActionResult> DeleteFlight(int id)
+        public IActionResult DeleteFlight(int id)
         {
-           return await _flightService.DeleteFlight(id);
+            return _flightService.DeleteFlight(id);
         }
     }
 }

@@ -48,6 +48,10 @@ namespace FlightsAPI.Services
             string destination,
             int planeId)
         {
+            if ((!arrivalTime.HasValue || !departureTime.HasValue || string.IsNullOrWhiteSpace(origin)
+                 || string.IsNullOrWhiteSpace(destination) || planeId <= 0))
+                return new BadRequestResult();
+
             var flight = new Flight
             {
                 DepartureTime = departureTime,
@@ -57,12 +61,14 @@ namespace FlightsAPI.Services
                 PlaneId = planeId
             };
 
-            if (_flightRepository.GetAll().Contains(flight)) return new BadRequestResult();
-            _flightRepository.Add(flight);
+            if (_flightRepository.GetAll().FirstOrDefault(x=>x.Id == flight.Id) is not null)
+                return new BadRequestResult();
+
+            await _flightRepository.AddAsync(flight);
             return new OkResult();
         }
 
-        public async Task<IActionResult> EditFlight(int id,
+        public IActionResult EditFlight(int id,
             DateTime? arrivalTime,
             DateTime? departureTime,
             string origin,
@@ -72,7 +78,7 @@ namespace FlightsAPI.Services
             var flights = _flightRepository.GetAll();
             var flight = flights.FirstOrDefault(x => x.Id == id);
 
-            if (!flights.Contains(flights.FirstOrDefault(x => x.Id == id)!)) 
+            if (flight is null)
                 return new BadRequestResult();
 
             if (flight != null)
@@ -85,19 +91,20 @@ namespace FlightsAPI.Services
                 flight.PlaneId = planeId;
 
                 _flightRepository.Update(flight);
+                return new OkResult();
             }
 
-            return new OkResult();
+            return new BadRequestResult();
         }
 
-        public async Task<IActionResult> DeleteFlight(int id)
+        public IActionResult DeleteFlight(int id)
         {
             var flights = _flightRepository.GetAll();
             var flight = flights.FirstOrDefault(x => x.Id == id);
             if (flight is null)
                 return new NotFoundResult();
-            flights.Remove(flight);
 
+            flights.Remove(flight);
             return new OkResult();
         }
 

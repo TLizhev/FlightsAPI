@@ -22,10 +22,10 @@ namespace FlightsAPI.Repositories
             return _db.Flights.ToList();
         }
 
-        public void Add(Flight flight)
+        public async Task AddAsync(Flight flight)
         {
-            _db.Flights.Add(flight);
-            _db.SaveChanges();
+            await _db.Flights.AddAsync(flight);
+            await _db.SaveChangesAsync();
         }
 
         public void Update(Flight flight)

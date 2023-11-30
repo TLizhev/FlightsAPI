@@ -1,4 +1,6 @@
 using FlightsAPI.Data;
+using FlightsAPI.Data.Models;
+using FlightsAPI.Repositories;
 using FlightsAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,7 @@ builder.Services.AddScoped<IPassengerService, PassengerService>();
 builder.Services.AddScoped<IPlaneService, PlaneService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IDiscountService, DiscountService>();
+builder.Services.AddScoped<IFlightRepository, FlightRepository>();
 
 var app = builder.Build();
 
