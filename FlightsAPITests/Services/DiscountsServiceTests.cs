@@ -24,7 +24,7 @@
 //    {
 //        _ticketServiceMock = new Mock<ITicketService>();
 //        _ticketService = new TicketRepositoryMock();
-        
+
 //        _sut = new DiscountService(DbContextMock.GetMock(_ticketService.));
 //    }
 

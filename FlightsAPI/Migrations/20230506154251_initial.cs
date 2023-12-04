@@ -1,10 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable disable
 
 namespace FlightsAPI.Migrations
 {
+    [ExcludeFromCodeCoverage]
     public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

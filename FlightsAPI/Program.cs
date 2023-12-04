@@ -1,5 +1,4 @@
 using FlightsAPI.Data;
-using FlightsAPI.Data.Models;
 using FlightsAPI.Repositories;
 using FlightsAPI.Services;
 

@@ -7,10 +7,12 @@ namespace FlightsAPI.Services
     public class LuggageService : ILuggageService
     {
         private readonly ILuggageRepository _luggageRepository;
+        private readonly ILogger _logger;
 
-        public LuggageService(ILuggageRepository luggageRepository)
+        public LuggageService(ILuggageRepository luggageRepository, ILogger logger)
         {
             _luggageRepository = luggageRepository;
+            _logger = logger;
         }
 
         public List<Luggage> GetLuggages()
@@ -46,15 +48,20 @@ namespace FlightsAPI.Services
 
         public IActionResult UpdateLuggage(int id, int luggageTypeId, int passengerId)
         {
-            var luggage = new Luggage
+            try
             {
-                Id = id,
-                LuggageTypeId = luggageTypeId,
-                PassengerId = passengerId
-            };
+                var luggage = _luggageRepository.GetById(id);
+                luggage.LuggageTypeId = luggageTypeId;
+                luggage.PassengerId = passengerId;
 
-            _luggageRepository.Update(luggage);
-            return new OkResult();
+                _luggageRepository.Update(luggage);
+                return new OkResult();
+            }
+            catch (Exception e)
+            {
+                _logger.Log(LogLevel.Error, e.Message);
+                return new BadRequestResult();
+            }
         }
 
         public IActionResult DeleteLuggage(int id)

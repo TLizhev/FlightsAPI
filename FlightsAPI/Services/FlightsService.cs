@@ -1,5 +1,4 @@
-﻿using FlightsAPI.Data;
-using FlightsAPI.Data.Models;
+﻿using FlightsAPI.Data.Models;
 using FlightsAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -61,7 +60,7 @@ namespace FlightsAPI.Services
                 PlaneId = planeId
             };
 
-            if (_flightRepository.GetAll().FirstOrDefault(x=>x.Id == flight.Id) is not null)
+            if (_flightRepository.GetAll().FirstOrDefault(x => x.Id == flight.Id) is not null)
                 return new BadRequestResult();
 
             await _flightRepository.AddAsync(flight);
@@ -81,20 +80,15 @@ namespace FlightsAPI.Services
             if (flight is null)
                 return new BadRequestResult();
 
-            if (flight != null)
-            {
-                flight.Id = id;
-                flight.DepartureTime = departureTime;
-                flight.ArrivalTime = arrivalTime;
-                flight.Origin = origin;
-                flight.Destination = destination;
-                flight.PlaneId = planeId;
+            flight.Id = id;
+            flight.DepartureTime = departureTime;
+            flight.ArrivalTime = arrivalTime;
+            flight.Origin = origin;
+            flight.Destination = destination;
+            flight.PlaneId = planeId;
 
-                _flightRepository.Update(flight);
-                return new OkResult();
-            }
-
-            return new BadRequestResult();
+            _flightRepository.Update(flight);
+            return new OkResult();
         }
 
         public IActionResult DeleteFlight(int id)
@@ -119,24 +113,18 @@ namespace FlightsAPI.Services
 
         private static List<TopFiveDto> GetTopFiveFlights(List<string> flightList)
         {
-            var result = new List<TopFiveDto>();
-
             var flights =
                 flightList.GroupBy(x => x)
                     .ToDictionary(x => x.Key, x => x.Select(y => y)
                         .Count()).OrderByDescending(x => x.Value).Take(5).ToDictionary(x => x.Key, x => x.Value);
 
-            foreach (var flight in flights)
-            {
-                var dto = new TopFiveDto
+            return flights
+                .Select(flight => new TopFiveDto
                 {
                     Name = flight.Key,
                     Number = flight.Value,
-                };
-                result.Add(dto);
-            }
-
-            return result;
+                })
+                .ToList();
         }
     }
 }

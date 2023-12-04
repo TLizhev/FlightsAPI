@@ -33,7 +33,7 @@ namespace FlightsAPI.Controllers
         public Plane GetMostSeats()
         {
             return _planeService.GetMostSeats();
-        } 
+        }
 
         [HttpGet]
         [Route("range")]
