@@ -27,9 +27,15 @@ namespace FlightsAPI.Services
         {
             var luggageTypes = _luggageRepository.GetAll().Select(x => x.LuggageTypeId).ToList();
 
+            if (luggageTypes is { Count: <= 0 })
+                throw new ArgumentException();
+
             var result = luggageTypes.GroupBy(x => x)
                 .ToDictionary(x => x.Key, x => x.Select(y => y)
                     .Count()).MaxBy(x => x.Value);
+
+            if (result.Key is 0)
+                throw new ArgumentException();
 
             return new LuggageType()
             {
@@ -54,6 +60,21 @@ namespace FlightsAPI.Services
         public IActionResult DeleteLuggage(int id)
         {
             _luggageRepository.Delete(id);
+            return new OkResult();
+        }
+
+        public async Task<IActionResult> AddLuggage(int luggageTypeId, int passengerId)
+        {
+            if (luggageTypeId < 1 || passengerId < 1)
+                return new BadRequestResult();
+
+            var luggage = new Luggage
+            {
+                LuggageTypeId = luggageTypeId,
+                PassengerId = passengerId
+            };
+
+            await _luggageRepository.AddAsync(luggage);
             return new OkResult();
         }
     }

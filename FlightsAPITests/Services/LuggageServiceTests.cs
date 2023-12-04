@@ -3,11 +3,9 @@ using FlightsAPI.Data.Models;
 using FlightsAPI.Repositories;
 using FlightsAPI.Services;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -17,6 +15,7 @@ namespace FlightsAPITests.Services
     {
         private readonly LuggageService _sut;
         private readonly Mock<ILuggageRepository> _luggageRepository;
+        private readonly Fixture _fixture = new Fixture();
 
         public LuggageServiceTests()
         {
@@ -27,13 +26,58 @@ namespace FlightsAPITests.Services
         [Fact]
         public void GetAllReturnsResult()
         {
-            Fixture luggageFixture = new Fixture();
-            var list = luggageFixture.CreateMany<Luggage>(3).ToList();
+            // Arrange
+            var list = _fixture.CreateMany<Luggage>(3).ToList();
             _luggageRepository.Setup(x => x.GetAll()).Returns(list);
 
+            // Act
             var result = _sut.GetLuggages();
 
+            // Assert
             result.Should().BeEquivalentTo(list);
+        }
+
+        [Fact]
+        public void GetByIdReturnsResult()
+        {
+            // Arrange
+            var list = _fixture.CreateMany<Luggage>(3).ToList();
+            list[0].Id = 5;
+
+            _luggageRepository.Setup(x => x.GetById(5)).Returns(list[0]);
+
+            // Act
+            var result = _sut.GetLuggage(5);
+
+            // Assert
+            result.Should().BeEquivalentTo(list[0]);
+        }
+
+        [Fact]
+        public async Task AddLuggageReturnsBadRequestOnInvalidId()
+        {
+            // Arrange
+            var luggage = _fixture.Create<Luggage>();
+            luggage.PassengerId = 0;
+
+            // Act
+            var result = await _sut.AddLuggage(luggage.PassengerId, luggage.LuggageTypeId);
+
+            // Assert
+            result.Should().BeOfType<BadRequestResult>();
+        }
+
+        [Fact]
+        public async Task AddLuggageReturnsOkWhenParametersAreValid()
+        {
+            // Arrange
+            var luggage = _fixture.Create<Luggage>();
+
+            // Act
+            var result = await _sut.AddLuggage(luggage.PassengerId, luggage.LuggageTypeId);
+
+            // Assert
+            result.Should().BeOfType<OkResult>();
         }
     }
 }

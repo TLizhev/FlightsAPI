@@ -30,7 +30,7 @@ namespace FlightsAPI.Repositories
 
         public Luggage GetById(int id)
         {
-            return _db.Luggages.First(x => x.Id == id);
+            return _db.Luggages.FirstOrDefault(x => x.Id == id)!;
         }
 
         public void Update(Luggage luggage)

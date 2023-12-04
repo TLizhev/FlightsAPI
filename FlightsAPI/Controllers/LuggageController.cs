@@ -16,6 +16,7 @@ namespace FlightsAPI.Controllers
         }
 
         [HttpGet]
+        [Route("getAllLuggages")]
         public List<Luggage> GetLuggages()
         {
             return _luggageService.GetLuggages();
@@ -33,6 +34,13 @@ namespace FlightsAPI.Controllers
         public LuggageType GetPopularLuggage()
         {
             return _luggageService.GetMostPopularLuggage();
+        }
+
+        [HttpPost]
+        [Route("/addLuggage")]
+        public async Task<IActionResult> AddLuggage(int luggageTypeId, int passengerId)
+        {
+            return await _luggageService.AddLuggage(luggageTypeId, passengerId);
         }
 
         [HttpPatch]

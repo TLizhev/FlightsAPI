@@ -8,6 +8,7 @@ namespace FlightsAPI.Services
         List<Luggage> GetLuggages();
         Luggage GetLuggage(int id);
         LuggageType GetMostPopularLuggage();
+        Task<IActionResult> AddLuggage(int luggageTypeId, int passengerId);
         IActionResult UpdateLuggage(int id, int luggageTypeId, int passengerId);
         IActionResult DeleteLuggage(int id);
     }
