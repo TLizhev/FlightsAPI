@@ -4,7 +4,6 @@ using FlightsAPI.Repositories;
 using FlightsAPI.Services;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Linq;
@@ -17,14 +16,12 @@ namespace FlightsAPITests.Services
     {
         private readonly LuggageService _sut;
         private readonly Mock<ILuggageRepository> _luggageRepository;
-        private readonly Mock<ILogger> _logger;
         private readonly Fixture _fixture = new();
 
         public LuggageServiceTests()
         {
-            _logger = new Mock<ILogger>();
             _luggageRepository = new();
-            _sut = new(_luggageRepository.Object, _logger.Object);
+            _sut = new(_luggageRepository.Object);
         }
 
         [Fact]
@@ -110,7 +107,6 @@ namespace FlightsAPITests.Services
 
             // Assert
             result.Should().BeOfType<BadRequestResult>();
-            _logger.Verify();
         }
     }
 }

@@ -7,12 +7,10 @@ namespace FlightsAPI.Services
     public class LuggageService : ILuggageService
     {
         private readonly ILuggageRepository _luggageRepository;
-        private readonly ILogger _logger;
 
-        public LuggageService(ILuggageRepository luggageRepository, ILogger logger)
+        public LuggageService(ILuggageRepository luggageRepository)
         {
             _luggageRepository = luggageRepository;
-            _logger = logger;
         }
 
         public List<Luggage> GetLuggages()
@@ -59,7 +57,6 @@ namespace FlightsAPI.Services
             }
             catch (Exception e)
             {
-                _logger.Log(LogLevel.Error, e.Message);
                 return new BadRequestResult();
             }
         }

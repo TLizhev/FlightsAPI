@@ -37,7 +37,6 @@ namespace FlightsAPI.Controllers
         }
 
         [HttpPost]
-        [Route(Endpoints.AddFlight)]
         public async Task<IActionResult> AddFlight(string origin,
             string destination,
             DateTime? departureTime,
@@ -48,7 +47,6 @@ namespace FlightsAPI.Controllers
         }
 
         [HttpPatch]
-        [Route(Endpoints.PatchFlight)]
         public IActionResult PatchFlight(int id,
             string origin,
             string destination,
@@ -60,7 +58,6 @@ namespace FlightsAPI.Controllers
         }
 
         [HttpDelete]
-        [Route(Endpoints.DeleteFlight)]
         public IActionResult DeleteFlight(int id)
         {
             return _flightService.DeleteFlight(id);
