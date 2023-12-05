@@ -18,9 +18,9 @@ namespace FlightsAPI.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public void Delete(int id)
+        public void Delete(Luggage luggage)
         {
-            _db.Luggages.Remove(GetById(id));
+            _db.Luggages.Remove(luggage);
         }
 
         public List<Luggage> GetAll()

@@ -47,6 +47,7 @@ namespace FlightsAPI.Controllers
         }
 
         [HttpPatch]
+        [Route("{id:int}")]
         public IActionResult PatchFlight(int id,
             string origin,
             string destination,
@@ -58,6 +59,7 @@ namespace FlightsAPI.Controllers
         }
 
         [HttpDelete]
+        [Route("{id:int}")]
         public IActionResult DeleteFlight(int id)
         {
             return _flightService.DeleteFlight(id);

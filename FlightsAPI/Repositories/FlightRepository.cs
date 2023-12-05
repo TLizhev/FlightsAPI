@@ -34,9 +34,9 @@ namespace FlightsAPI.Repositories
             _db.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(Flight flight)
         {
-            _db.Flights.Remove(GetById(id));
+            _db.Flights.Remove(flight);
         }
     }
 }

@@ -34,9 +34,6 @@ namespace FlightsAPI.Services
                 .ToDictionary(x => x.Key, x => x.Select(y => y)
                     .Count()).MaxBy(x => x.Value);
 
-            if (result.Key is 0)
-                throw new ArgumentException();
-
             return new LuggageType()
             {
                 Id = result.Key,
@@ -55,7 +52,7 @@ namespace FlightsAPI.Services
                 _luggageRepository.Update(luggage);
                 return new OkResult();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return new BadRequestResult();
             }
@@ -63,8 +60,17 @@ namespace FlightsAPI.Services
 
         public IActionResult DeleteLuggage(int id)
         {
-            _luggageRepository.Delete(id);
-            return new OkResult();
+            try
+            {
+                var luggage = _luggageRepository.GetById(id);
+
+                _luggageRepository.Delete(luggage);
+                return new OkResult();
+            }
+            catch (Exception)
+            {
+                return new BadRequestResult();
+            }
         }
 
         public async Task<IActionResult> AddLuggage(int luggageTypeId, int passengerId)

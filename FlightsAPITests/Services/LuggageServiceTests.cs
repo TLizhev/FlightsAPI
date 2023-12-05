@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -107,6 +108,72 @@ namespace FlightsAPITests.Services
 
             // Assert
             result.Should().BeOfType<BadRequestResult>();
+        }
+
+        [Fact]
+        public void DeleteLuggageReturnsOkResultWithValidParameters()
+        {
+            // Arrange
+            var luggage = _fixture.Create<Luggage>();
+            _luggageRepository.Setup(x => x.GetById(It.IsAny<int>())).Returns(luggage);
+
+            // Act
+            var result = _sut.DeleteLuggage(luggage.Id);
+
+            // Assert
+            result.Should().BeOfType<OkResult>();
+        }
+
+        [Fact]
+        public void DeleteLuggageReturnsBadRequestResultWithInValidParameters()
+        {
+            // Arrange
+            var luggage = _fixture.Create<Luggage>();
+            _luggageRepository.Setup(x => x.GetById(luggage.Id)).Throws<InvalidOperationException>();
+
+            // Act
+            var result = _sut.DeleteLuggage(luggage.Id);
+
+            // Assert
+            result.Should().BeOfType<BadRequestResult>();
+        }
+
+        [Fact]
+        public void GetMostPopularReturnsCorrectResult()
+        {
+            // Arrange
+            var luggages = _fixture.CreateMany<Luggage>().ToList();
+            luggages[0].LuggageTypeId = 1;
+            luggages[1].LuggageTypeId = 1;
+            var luggageTypes = _fixture.CreateMany<LuggageType>().ToList();
+            luggageTypes[0].Id = 1;
+            luggageTypes[1].Id = 1;
+
+            _luggageRepository.Setup(x => x.GetAll()).Returns(luggages);
+            _luggageRepository.Setup(x => x.GetLuggageTypes()).Returns(luggageTypes);
+
+            var expected = new Luggage()
+            {
+                Id = It.IsAny<int>(),
+                LuggageTypeId = 1,
+                PassengerId = It.IsAny<int>()
+            };
+
+            // Act
+            var result = _sut.GetMostPopularLuggage();
+
+            // Assert
+            result.Id.Should().Be(expected.LuggageTypeId);
+        }
+
+        [Fact]
+        public void GetMostPopularThrowsWhenLuggageTypesIsEmpty()
+        {
+            _luggageRepository.Setup(x => x.GetAll()).Returns(new List<Luggage>());
+
+            var result = () => _sut.GetMostPopularLuggage();
+
+            result.Should().Throw<ArgumentException>();
         }
     }
 }
