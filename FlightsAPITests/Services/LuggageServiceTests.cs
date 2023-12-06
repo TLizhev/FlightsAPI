@@ -56,6 +56,22 @@ namespace FlightsAPITests.Services
         }
 
         [Fact]
+        public void GetByIdThrowsWhenIdDoesNotExist()
+        {
+            // Arrange
+            var list = _fixture.CreateMany<Luggage>(3).ToList();
+            list[0].Id = 5;
+
+            _luggageRepository.Setup(x => x.GetById(It.IsAny<int>())).Throws<InvalidOperationException>();
+
+            // Act
+            var result = () => _sut.GetLuggage(5);
+
+            // Assert
+            result.Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
         public async Task AddLuggageReturnsBadRequestOnInvalidId()
         {
             // Arrange

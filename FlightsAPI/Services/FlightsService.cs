@@ -15,7 +15,7 @@ namespace FlightsAPI.Services
 
         public Flight GetFlight(int id)
         {
-            return _flightRepository.GetById(id);
+            return _flightRepository.GetById(id) ?? throw new InvalidOperationException();
         }
 
         public List<Flight> GetFlights()

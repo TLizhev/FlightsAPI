@@ -20,7 +20,7 @@ namespace FlightsAPI.Services
 
         public Luggage GetLuggage(int id)
         {
-            return _luggageRepository.GetById(id);
+            return _luggageRepository.GetById(id) ?? throw new InvalidOperationException();
         }
 
         public LuggageType GetMostPopularLuggage()

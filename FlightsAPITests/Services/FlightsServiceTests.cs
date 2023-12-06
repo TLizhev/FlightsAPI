@@ -87,5 +87,27 @@ namespace FlightsAPITests.Services
 
             result.Should().BeOfType<BadRequestResult>();
         }
+
+        [Fact]
+        public void GetFlightReturnsCorrectFlight()
+        {
+            var flight = _fixture.Create<Flight>();
+            _flightsRepository.Setup(x => x.GetById(It.IsAny<int>())).Returns(flight);
+
+            var result = _sut.GetFlight(flight.Id);
+
+            result.Id.Should().Be(flight.Id);
+        }
+
+        [Fact]
+        public void GetFlightThrowsWhenFlightDoesNotExist()
+        {
+            var flight = _fixture.Create<Flight>();
+            _flightsRepository.Setup(x => x.GetById(It.IsAny<int>())).Throws<InvalidOperationException>();
+
+            var result = () => _sut.GetFlight(flight.Id);
+
+            result.Should().Throw<InvalidOperationException>();
+        }
     }
 }

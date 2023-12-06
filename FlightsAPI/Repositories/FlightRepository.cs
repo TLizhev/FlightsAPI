@@ -14,7 +14,7 @@ namespace FlightsAPI.Repositories
 
         public Flight GetById(int id)
         {
-            return _db.Flights.FirstOrDefault(x => x.Id == id)!;
+            return _db.Flights.SingleOrDefault(x => x.Id == id)!;
         }
 
         public List<Flight> GetAll()
