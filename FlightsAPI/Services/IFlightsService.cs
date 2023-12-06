@@ -9,7 +9,7 @@ namespace FlightsAPI.Services
         Flight GetFlight(int id);
         List<TopFiveDto> GetTopFiveFlightOrigins();
         List<TopFiveDto> GetTopFiveFlightDestinations();
-        List<TopFiveDto> GetTopFiveFlights(string direction);
+        List<TopFiveDto> TopFiveFlights(string direction);
         Task<IActionResult> AddFlight(DateTime? arrivalTime,
             DateTime? departureTime,
             string origin,

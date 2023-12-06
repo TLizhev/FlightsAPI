@@ -31,7 +31,7 @@ namespace FlightsAPI.Services
 
             return flights;
         }
-        public List<TopFiveDto> GetTopFiveFlights(string direction)
+        public List<TopFiveDto> TopFiveFlights(string direction)
         {
             return direction switch
             {
@@ -98,7 +98,7 @@ namespace FlightsAPI.Services
             if (flight is null)
                 return new NotFoundResult();
 
-            flights.Remove(flight);
+            _flightRepository.Delete(flight);
             return new OkResult();
         }
 
@@ -111,7 +111,7 @@ namespace FlightsAPI.Services
             return flights;
         }
 
-        private static List<TopFiveDto> GetTopFiveFlights(List<string> flightList)
+        private static List<TopFiveDto> GetTopFiveFlights(IEnumerable<string> flightList)
         {
             var flights =
                 flightList.GroupBy(x => x)

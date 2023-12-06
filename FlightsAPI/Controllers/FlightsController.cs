@@ -33,7 +33,7 @@ namespace FlightsAPI.Controllers
         [Route(Endpoints.TopFlights)]
         public List<TopFiveDto> GetTop5Flights(string direction)
         {
-            return _flightService.GetTopFiveFlights(direction);
+            return _flightService.TopFiveFlights(direction);
         }
 
         [HttpPost]
