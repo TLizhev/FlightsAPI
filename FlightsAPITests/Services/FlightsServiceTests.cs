@@ -3,10 +3,10 @@ using FlightsAPI.Data.Models;
 using FlightsAPI.Repositories;
 using FlightsAPI.Services;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -26,43 +26,34 @@ namespace FlightsAPITests.Services
         }
 
         [Fact]
-        public async Task AddFlightReturnsBadRequestWhenParametersAreInvalid()
+        public async Task AddFlightReturnsThrowsWhenParametersAreInvalid()
         {
             // Arrange
             var flight = _fixture.Create<Flight>();
             flight.Destination = "";
 
             // Act
-            var result = await _sut.AddFlight(
-                flight.DepartureTime,
-                flight.ArrivalTime,
-                flight.Origin,
-                flight.Destination,
-                flight.PlaneId);
+            var result = async () => await _sut.AddFlight(flight);
 
-            result.Should().BeOfType<BadRequestResult>();
+            await result.Should().ThrowAsync<InvalidDataException>();
         }
 
         [Fact]
-        public async Task AddFlightReturnsOkWhenParametersAreValid()
+        public async Task AddFlightWorksWhenParametersAreValid()
         {
             // Arrange
             var flight = _fixture.Create<Flight>();
             _flightsRepository.Setup(x => x.GetAll()).Returns(new List<Flight>());
 
             // Act
-            var result = await _sut.AddFlight(
-                flight.DepartureTime,
-                flight.ArrivalTime,
-                flight.Origin,
-                flight.Destination,
-                flight.PlaneId);
+            await _sut.AddFlight(flight);
 
-            result.Should().BeOfType<OkResult>();
+            // Assert
+            _flightsRepository.Verify(x=>x.AddAsync(It.IsAny<Flight>()), Times.Once);
         }
 
         [Fact]
-        public async Task AddFlightReturnsBadRequestWhenFlightAlreadyExists()
+        public async Task AddFlightThrowsWhenFlightAlreadyExists()
         {
             // Arrange
             var flight = new Flight
@@ -79,14 +70,9 @@ namespace FlightsAPITests.Services
             _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
 
             // Act
-            var result = await _sut.AddFlight(
-                flight.DepartureTime,
-                flight.ArrivalTime,
-                flight.Origin,
-                flight.Destination,
-                flight.PlaneId);
+            var result = async () => await _sut.AddFlight(flight);
 
-            result.Should().BeOfType<BadRequestResult>();
+            await result.Should().ThrowAsync<InvalidOperationException>();
         }
 
         [Fact]
@@ -143,36 +129,23 @@ namespace FlightsAPITests.Services
             _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
 
             // Act
-            var result = _sut.EditFlight(
-                flight.Id,
-                flight.ArrivalTime,
-                flight.DepartureTime,
-                flight.Origin,
-                flight.Destination,
-                It.IsAny<int>());
+            _sut.EditFlight(flight);
 
             // Assert
-            result.Should().BeOfType<OkResult>();
             _flightsRepository.Verify(x => x.Update(flight), Times.Once);
         }
 
         [Fact]
-        public void EditFlightReturnsBadRequestWhenFlightDoesNotExist()
+        public void EditFlightThrowsWhenFlightDoesNotExist()
         {
             // Arrange
             _flightsRepository.Setup(x => x.GetAll()).Returns(new List<Flight>());
 
             // Act
-            var result = _sut.EditFlight(
-                It.IsAny<int>(),
-                It.IsAny<DateTime>(),
-                It.IsAny<DateTime>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<int>());
+            var result = () => _sut.EditFlight(new Flight());
 
-            result.Should().BeOfType<BadRequestResult>();
-            _flightsRepository.Verify(x => x.Update(It.IsAny<Flight>()), Times.Never);
+            // Assert
+            result.Should().Throw<InvalidDataException>();
         }
 
         [Fact]
@@ -186,23 +159,22 @@ namespace FlightsAPITests.Services
             _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
 
             // Act
-            var result = _sut.DeleteFlight(flight.Id);
+            _sut.DeleteFlight(flight.Id);
 
             // Assert
-            result.Should().BeOfType<OkResult>();
             _flightsRepository.Verify(x => x.Delete(flight), Times.Once);
         }
 
         [Fact]
-        public void DeleteFlightReturnsNotFoundWhenFlightDoesNotExist()
+        public void DeleteFlightThrowsWhenFlightDoesNotExist()
         {
             // Arrange
             _flightsRepository.Setup(x => x.GetAll()).Returns(new List<Flight>());
 
             // Act
-            var result = _sut.DeleteFlight(It.IsAny<int>());
+            var result = () => _sut.DeleteFlight(It.IsAny<int>());
 
-            result.Should().BeOfType<NotFoundResult>();
+            result.Should().Throw<InvalidOperationException>();
             _flightsRepository.Verify(x => x.Delete(It.IsAny<Flight>()), Times.Never);
         }
 

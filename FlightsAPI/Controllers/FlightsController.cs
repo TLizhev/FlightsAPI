@@ -17,52 +17,130 @@ namespace FlightsAPI.Controllers
         }
 
         [HttpGet]
-        public List<Flight> GetFlights()
+        [ProducesResponseType(typeof(IEnumerable<Flight>), 200)]
+        [ProducesResponseType(204)]
+        public IActionResult GetFlights()
         {
-            return _flightService.GetFlights();
+            var flights = _flightService.GetFlights();
+
+            if (flights is { Count: 0 })
+                return NoContent();
+
+            return Ok(flights);
         }
 
         [HttpGet]
         [Route("{id:int}")]
-        public Flight GetFlight(int id)
+        [ProducesResponseType(typeof(Flight), 200)]
+        [ProducesResponseType(404)]
+        public IActionResult GetFlight(int id)
         {
-            return _flightService.GetFlight(id);
+            try
+            {
+                var flight = _flightService.GetFlight(id);
+                return Ok(flight);
+            }
+            catch (Exception)
+            {
+                return NotFound("A flight with this id does not exist.");
+            }
         }
 
         [HttpGet]
         [Route(Endpoints.TopFlights)]
-        public List<TopFiveDto> GetTop5Flights(string direction)
+        [ProducesResponseType(typeof(IEnumerable<TopFiveDto>), 200)]
+        [ProducesResponseType(404)]
+        public IActionResult GetTopFiveFlights(string direction)
         {
-            return _flightService.TopFiveFlights(direction);
+            try
+            {
+                var topFive = _flightService.TopFiveFlights(direction);
+                return Ok(topFive);
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
+
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddFlight(string origin,
-            string destination,
-            DateTime? departureTime,
-            DateTime? arrivalTime,
-            int planeId)
-        {
-            return await _flightService.AddFlight(arrivalTime, departureTime, origin, destination, planeId);
-        }
-
-        [HttpPatch]
-        [Route("{id:int}")]
-        public IActionResult PatchFlight(int id,
+        [ProducesResponseType(typeof(Flight), 201)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> AddFlight(
             string origin,
             string destination,
             DateTime? departureTime,
             DateTime? arrivalTime,
             int planeId)
         {
-            return _flightService.EditFlight(id, arrivalTime, departureTime, origin, destination, planeId);
+            try
+            {
+                var flight = new Flight
+                {
+                    DepartureTime = departureTime,
+                    ArrivalTime = arrivalTime,
+                    Origin = origin,
+                    Destination = destination,
+                    PlaneId = planeId
+                };
+
+                await _flightService.AddFlight(flight);
+                return CreatedAtRoute("GetFlight", new { flightId = flight.Id }, flight);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPatch]
+        [Route("{id:int}")]
+        [ProducesResponseType(typeof(Flight), 200)]
+        [ProducesResponseType(404)]
+        public IActionResult PatchFlight(
+            int id,
+            string origin,
+            string destination,
+            DateTime? departureTime,
+            DateTime? arrivalTime,
+            int planeId)
+        {
+            var newFlight = new Flight()
+            {
+                Destination = destination,
+                ArrivalTime = arrivalTime,
+                DepartureTime = departureTime,
+                Id = id,
+                Origin = origin,
+                PlaneId = planeId
+            };
+            try
+            {
+                _flightService.EditFlight(newFlight);
+                return Ok(newFlight);
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         [HttpDelete]
         [Route("{id:int}")]
+        [ProducesResponseType(typeof(Flight), 204)]
+        [ProducesResponseType(404)]
         public IActionResult DeleteFlight(int id)
         {
-            return _flightService.DeleteFlight(id);
+            try
+            {
+                _flightService.DeleteFlight(id);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
         }
     }
 }

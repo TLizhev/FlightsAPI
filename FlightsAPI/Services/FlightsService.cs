@@ -1,6 +1,5 @@
 ﻿using FlightsAPI.Data.Models;
 using FlightsAPI.Repositories;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsAPI.Services
 {
@@ -41,65 +40,44 @@ namespace FlightsAPI.Services
             };
         }
 
-        public async Task<IActionResult> AddFlight(DateTime? arrivalTime,
-            DateTime? departureTime,
-            string origin,
-            string destination,
-            int planeId)
+        public async Task AddFlight(Flight flight)
         {
-            if ((!arrivalTime.HasValue || !departureTime.HasValue || string.IsNullOrWhiteSpace(origin)
-                 || string.IsNullOrWhiteSpace(destination) || planeId <= 0))
-                return new BadRequestResult();
-
-            var flight = new Flight
-            {
-                DepartureTime = departureTime,
-                ArrivalTime = arrivalTime,
-                Origin = origin,
-                Destination = destination,
-                PlaneId = planeId
-            };
+            if ((!flight.ArrivalTime.HasValue || !flight.DepartureTime.HasValue || string.IsNullOrWhiteSpace(flight.Origin)
+                 || string.IsNullOrWhiteSpace(flight.Destination) || flight.PlaneId <= 0))
+                throw new InvalidDataException();
 
             if (_flightRepository.GetAll().FirstOrDefault(x => x.Id == flight.Id) is not null)
-                return new BadRequestResult();
+                throw new InvalidOperationException("A flight with this id already exists.");
 
             await _flightRepository.AddAsync(flight);
-            return new OkResult();
         }
 
-        public IActionResult EditFlight(int id,
-            DateTime? arrivalTime,
-            DateTime? departureTime,
-            string origin,
-            string destination,
-            int planeId)
+        public void EditFlight(Flight newFlight)
         {
             var flights = _flightRepository.GetAll();
-            var flight = flights.FirstOrDefault(x => x.Id == id);
+            var flight = flights.FirstOrDefault(x => x.Id == newFlight.Id);
 
             if (flight is null)
-                return new BadRequestResult();
+                throw new InvalidDataException("A flight with this id does not exist.");
 
-            flight.Id = id;
-            flight.DepartureTime = departureTime;
-            flight.ArrivalTime = arrivalTime;
-            flight.Origin = origin;
-            flight.Destination = destination;
-            flight.PlaneId = planeId;
+            flight.Id = newFlight.Id;
+            flight.DepartureTime = newFlight.DepartureTime;
+            flight.ArrivalTime = newFlight.ArrivalTime;
+            flight.Origin = newFlight.Origin;
+            flight.Destination = newFlight.Destination;
+            flight.PlaneId = newFlight.PlaneId;
 
             _flightRepository.Update(flight);
-            return new OkResult();
         }
 
-        public IActionResult DeleteFlight(int id)
+        public void DeleteFlight(int id)
         {
             var flights = _flightRepository.GetAll();
             var flight = flights.FirstOrDefault(x => x.Id == id);
             if (flight is null)
-                return new NotFoundResult();
+                throw new InvalidOperationException("A flight with this id does not exist.");
 
             _flightRepository.Delete(flight);
-            return new OkResult();
         }
 
         public List<TopFiveDto> GetTopFiveFlightDestinations()
