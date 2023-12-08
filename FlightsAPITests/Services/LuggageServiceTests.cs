@@ -3,10 +3,10 @@ using FlightsAPI.Data.Models;
 using FlightsAPI.Repositories;
 using FlightsAPI.Services;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -33,7 +33,7 @@ namespace FlightsAPITests.Services
             _luggageRepository.Setup(x => x.GetAll()).Returns(list);
 
             // Act
-            var result = _sut.GetLuggages();
+            var result = _sut.GetLuggage();
 
             // Assert
             result.Should().BeEquivalentTo(list);
@@ -79,10 +79,10 @@ namespace FlightsAPITests.Services
             luggage.PassengerId = 0;
 
             // Act
-            var result = await _sut.AddLuggage(luggage.PassengerId, luggage.LuggageTypeId);
+            var result = async () => await _sut.AddLuggage(luggage);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            await result.Should().ThrowAsync<InvalidDataException>();
         }
 
         [Fact]
@@ -92,10 +92,10 @@ namespace FlightsAPITests.Services
             var luggage = _fixture.Create<Luggage>();
 
             // Act
-            var result = await _sut.AddLuggage(luggage.PassengerId, luggage.LuggageTypeId);
+            await _sut.AddLuggage(luggage);
 
             // Assert
-            result.Should().BeOfType<OkResult>();
+            _luggageRepository.Verify(x => x.AddAsync(It.IsAny<Luggage>()), Times.Once);
         }
 
         [Fact]
@@ -106,24 +106,24 @@ namespace FlightsAPITests.Services
             _luggageRepository.Setup(x => x.GetById(It.IsAny<int>())).Returns(luggage);
 
             // Act
-            var result = _sut.UpdateLuggage(luggage.Id, luggage.LuggageTypeId, luggage.PassengerId);
+            _sut.UpdateLuggage(luggage);
 
             // Assert
-            result.Should().BeOfType<OkResult>();
+            _luggageRepository.Verify(x => x.Update(It.IsAny<Luggage>()), Times.Once);
         }
 
         [Fact]
-        public void UpdateLuggageReturnsBadRequestResultWithInValidParameters()
+        public void UpdateLuggageThrowsWithInValidParameters()
         {
             // Arrange
             var luggage = _fixture.Create<Luggage>();
             _luggageRepository.Setup(x => x.GetById(luggage.Id)).Throws<InvalidOperationException>();
 
             // Act
-            var result = _sut.UpdateLuggage(luggage.Id, luggage.LuggageTypeId, luggage.PassengerId);
+            var result = () => _sut.UpdateLuggage(luggage);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            result.Should().Throw<InvalidOperationException>();
         }
 
         [Fact]
@@ -134,24 +134,24 @@ namespace FlightsAPITests.Services
             _luggageRepository.Setup(x => x.GetById(It.IsAny<int>())).Returns(luggage);
 
             // Act
-            var result = _sut.DeleteLuggage(luggage.Id);
+            _sut.DeleteLuggage(luggage.Id);
 
             // Assert
-            result.Should().BeOfType<OkResult>();
+            _luggageRepository.Verify(x => x.Delete(It.IsAny<Luggage>()), Times.Once);
         }
 
         [Fact]
-        public void DeleteLuggageReturnsBadRequestResultWithInValidParameters()
+        public void DeleteLuggageThrowsWithInValidParameters()
         {
             // Arrange
             var luggage = _fixture.Create<Luggage>();
             _luggageRepository.Setup(x => x.GetById(luggage.Id)).Throws<InvalidOperationException>();
 
             // Act
-            var result = _sut.DeleteLuggage(luggage.Id);
+            var result = () => _sut.DeleteLuggage(luggage.Id);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            result.Should().Throw<InvalidOperationException>();
         }
 
         [Fact]

@@ -1,6 +1,5 @@
 ﻿using FlightsAPI.Data.Models;
 using FlightsAPI.Repositories;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsAPI.Services
 {
@@ -13,7 +12,7 @@ namespace FlightsAPI.Services
             _luggageRepository = luggageRepository;
         }
 
-        public List<Luggage> GetLuggages()
+        public List<Luggage> GetLuggage()
         {
             return _luggageRepository.GetAll();
         }
@@ -41,51 +40,33 @@ namespace FlightsAPI.Services
             };
         }
 
-        public IActionResult UpdateLuggage(int id, int luggageTypeId, int passengerId)
+        public void UpdateLuggage(Luggage newLuggage)
         {
-            try
-            {
-                var luggage = _luggageRepository.GetById(id);
-                luggage.LuggageTypeId = luggageTypeId;
-                luggage.PassengerId = passengerId;
+            var luggage = _luggageRepository.GetById(newLuggage.Id);
+            if (luggage is null)
+                throw new InvalidDataException("A luggage with this id does not exist.");
 
-                _luggageRepository.Update(luggage);
-                return new OkResult();
-            }
-            catch (Exception)
-            {
-                return new BadRequestResult();
-            }
+            luggage.LuggageTypeId = newLuggage.LuggageTypeId;
+            luggage.PassengerId = newLuggage.PassengerId;
+
+            _luggageRepository.Update(luggage);
         }
 
-        public IActionResult DeleteLuggage(int id)
+        public void DeleteLuggage(int id)
         {
-            try
-            {
-                var luggage = _luggageRepository.GetById(id);
+            var luggage = _luggageRepository.GetById(id);
+            if (luggage is null)
+                throw new InvalidOperationException("A flight with this id does not exist.");
 
-                _luggageRepository.Delete(luggage);
-                return new OkResult();
-            }
-            catch (Exception)
-            {
-                return new BadRequestResult();
-            }
+            _luggageRepository.Delete(luggage);
         }
 
-        public async Task<IActionResult> AddLuggage(int luggageTypeId, int passengerId)
+        public async Task AddLuggage(Luggage luggage)
         {
-            if (luggageTypeId < 1 || passengerId < 1)
-                return new BadRequestResult();
-
-            var luggage = new Luggage
-            {
-                LuggageTypeId = luggageTypeId,
-                PassengerId = passengerId
-            };
+            if (luggage.LuggageTypeId < 1 || luggage.PassengerId < 1)
+                throw new InvalidDataException("Ids must be greater than 0");
 
             await _luggageRepository.AddAsync(luggage);
-            return new OkResult();
         }
     }
 }

@@ -21,6 +21,7 @@ namespace FlightsAPI.Repositories
         public void Delete(Luggage luggage)
         {
             _db.Luggages.Remove(luggage);
+            _db.SaveChanges();
         }
 
         public List<Luggage> GetAll()

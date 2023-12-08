@@ -49,7 +49,7 @@ namespace FlightsAPITests.Services
             await _sut.AddFlight(flight);
 
             // Assert
-            _flightsRepository.Verify(x=>x.AddAsync(It.IsAny<Flight>()), Times.Once);
+            _flightsRepository.Verify(x => x.AddAsync(It.IsAny<Flight>()), Times.Once);
         }
 
         [Fact]
@@ -152,11 +152,9 @@ namespace FlightsAPITests.Services
         public void DeleteFlightReturnsOkWhenFlightExists()
         {
             // Arrange
-            var flights = _fixture.CreateMany<Flight>().ToList();
-            var flight = flights[0];
-            flight.Id = 5;
+            var flight = _fixture.Create<Flight>();
 
-            _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
+            _flightsRepository.Setup(x => x.GetById(flight.Id)).Returns(flight);
 
             // Act
             _sut.DeleteFlight(flight.Id);
@@ -311,7 +309,7 @@ namespace FlightsAPITests.Services
             _ = _sut.TopFiveFlights("origin");
 
             // Assert
-            _flightsRepository.Verify(x=>x.GetAll(), Times.Once);
+            _flightsRepository.Verify(x => x.GetAll(), Times.Once);
         }
 
         [Fact]

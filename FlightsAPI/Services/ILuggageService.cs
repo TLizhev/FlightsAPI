@@ -1,15 +1,14 @@
 ﻿using FlightsAPI.Data.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsAPI.Services
 {
     public interface ILuggageService
     {
-        List<Luggage> GetLuggages();
+        List<Luggage> GetLuggage();
         Luggage GetLuggage(int id);
         LuggageType GetMostPopularLuggage();
-        Task<IActionResult> AddLuggage(int luggageTypeId, int passengerId);
-        IActionResult UpdateLuggage(int id, int luggageTypeId, int passengerId);
-        IActionResult DeleteLuggage(int id);
+        Task AddLuggage(Luggage luggage);
+        void UpdateLuggage(Luggage luggage);
+        void DeleteLuggage(int id);
     }
 }

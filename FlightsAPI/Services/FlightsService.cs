@@ -72,8 +72,8 @@ namespace FlightsAPI.Services
 
         public void DeleteFlight(int id)
         {
-            var flights = _flightRepository.GetAll();
-            var flight = flights.FirstOrDefault(x => x.Id == id);
+            var flight = _flightRepository.GetById(id);
+
             if (flight is null)
                 throw new InvalidOperationException("A flight with this id does not exist.");
 
