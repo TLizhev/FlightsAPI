@@ -146,7 +146,7 @@ namespace FlightsAPITests.Controllers
         }
 
         [Fact]
-        public void PathFlightReturnsOk()
+        public void PatchFlightReturnsOk()
         {
             // Arrange
             var flight = _fixture.Create<Flight>();

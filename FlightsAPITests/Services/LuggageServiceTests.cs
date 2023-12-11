@@ -72,7 +72,7 @@ namespace FlightsAPITests.Services
         }
 
         [Fact]
-        public async Task AddLuggageReturnsBadRequestOnInvalidId()
+        public async Task AddLuggageThrowsOnInvalidId()
         {
             // Arrange
             var luggage = _fixture.Create<Luggage>();
@@ -99,7 +99,7 @@ namespace FlightsAPITests.Services
         }
 
         [Fact]
-        public void UpdateLuggageReturnsOkResultWithValidParameters()
+        public void UpdateLuggageExecutesWithValidParameters()
         {
             // Arrange
             var luggage = _fixture.Create<Luggage>();
@@ -116,18 +116,18 @@ namespace FlightsAPITests.Services
         public void UpdateLuggageThrowsWithInValidParameters()
         {
             // Arrange
-            var luggage = _fixture.Create<Luggage>();
-            _luggageRepository.Setup(x => x.GetById(luggage.Id)).Throws<InvalidOperationException>();
+            var newLuggage = _fixture.Create<Luggage>();
+            _luggageRepository.Setup(x => x.GetById(It.IsAny<int>())).Returns((Luggage) null);
 
             // Act
-            var result = () => _sut.UpdateLuggage(luggage);
+            var result = () => _sut.UpdateLuggage(newLuggage);
 
             // Assert
-            result.Should().Throw<InvalidOperationException>();
+            result.Should().Throw<InvalidDataException>();
         }
 
         [Fact]
-        public void DeleteLuggageReturnsOkResultWithValidParameters()
+        public void DeleteLuggageExecutesWithValidParameters()
         {
             // Arrange
             var luggage = _fixture.Create<Luggage>();
@@ -144,11 +144,10 @@ namespace FlightsAPITests.Services
         public void DeleteLuggageThrowsWithInValidParameters()
         {
             // Arrange
-            var luggage = _fixture.Create<Luggage>();
-            _luggageRepository.Setup(x => x.GetById(luggage.Id)).Throws<InvalidOperationException>();
+            _luggageRepository.Setup(x => x.GetById(It.IsAny<int>())).Returns((Luggage) null);
 
             // Act
-            var result = () => _sut.DeleteLuggage(luggage.Id);
+            var result = () => _sut.DeleteLuggage(It.IsAny<int>());
 
             // Assert
             result.Should().Throw<InvalidOperationException>();

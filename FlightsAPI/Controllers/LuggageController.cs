@@ -1,11 +1,12 @@
-﻿using FlightsAPI.Data.Models;
+﻿using FlightsAPI.Data;
+using FlightsAPI.Data.Models;
 using FlightsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsAPI.Controllers
 {
     [ApiController]
-    [Route("/api/luggage")]
+    [Route(Endpoints.BaseLuggageEndpoint)]
     public class LuggageController : ControllerBase
     {
         private readonly ILuggageService _luggageService;
@@ -25,8 +26,7 @@ namespace FlightsAPI.Controllers
             if (luggage is {Count : 0})
                 return NoContent();
 
-            return Ok();
-
+            return Ok(luggage);
         }
 
         [HttpGet]
@@ -47,7 +47,7 @@ namespace FlightsAPI.Controllers
         }
 
         [HttpGet]
-        [Route("/popular")]
+        [Route(Endpoints.Popular)]
         [ProducesResponseType(typeof(Luggage), 200)]
         [ProducesResponseType(404)]
         public IActionResult GetPopularLuggage()
