@@ -1,10 +1,11 @@
-﻿using FlightsAPI.Services;
+﻿using FlightsAPI.Data;
+using FlightsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsAPI.Controllers
 {
     [ApiController]
-    [Route("api/discounts")]
+    [Route(Endpoints.BaseDiscountsEndpoint)]
     public class DiscountsController : ControllerBase
     {
         private readonly IDiscountService _discountService;

@@ -1,11 +1,12 @@
-﻿using FlightsAPI.Data.Models;
+﻿using FlightsAPI.Data;
+using FlightsAPI.Data.Models;
 using FlightsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsAPI.Controllers
 {
     [ApiController]
-    [Route("api/planes")]
+    [Route(Endpoints.BasePlanesEndpoint)]
     public class PlanesController : ControllerBase
     {
         private readonly IPlaneService _planeService;
@@ -29,14 +30,14 @@ namespace FlightsAPI.Controllers
         }
 
         [HttpGet]
-        [Route("seats")]
+        [Route(Endpoints.SeatsEndpoint)]
         public Plane GetMostSeats()
         {
             return _planeService.GetMostSeats();
         }
 
         [HttpGet]
-        [Route("range")]
+        [Route(Endpoints.RangeEndpoint)]
         public Plane GetMostRange()
         {
             return _planeService.GetBiggestRange();

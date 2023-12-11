@@ -1,11 +1,12 @@
-﻿using FlightsAPI.Data.Models;
+﻿using FlightsAPI.Data;
+using FlightsAPI.Data.Models;
 using FlightsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsAPI.Controllers
 {
     [ApiController]
-    [Route("/api/tickets")]
+    [Route(Endpoints.BaseTicketsEndpoint)]
     public class TicketsController : ControllerBase
     {
         private readonly ITicketService _ticketService;
@@ -29,7 +30,7 @@ namespace FlightsAPI.Controllers
         }
 
         [HttpGet]
-        [Route("FF")]
+        [Route(Endpoints.FrequentFliersEndpoint)]
         public List<FrequentFliersDto> GetFrequentFliers()
         {
             return _ticketService.FrequentFliers();

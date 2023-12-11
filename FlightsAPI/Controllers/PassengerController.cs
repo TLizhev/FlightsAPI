@@ -1,11 +1,12 @@
-﻿using FlightsAPI.Data.Models;
+﻿using FlightsAPI.Data;
+using FlightsAPI.Data.Models;
 using FlightsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsAPI.Controllers
 {
     [ApiController]
-    [Route("/api/passengers")]
+    [Route(Endpoints.BasePassengersEndpoint)]
     public class PassengerController : ControllerBase
     {
         private readonly IPassengerService _passengerService;
