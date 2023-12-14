@@ -1,38 +1,40 @@
-﻿using FlightsAPI.Data;
-using FlightsAPI.Data.Models;
+﻿using FlightsAPI.Data.Models;
+using FlightsAPI.Repositories;
 
 namespace FlightsAPI.Services
 {
     public class TicketService : ITicketService
     {
-        private readonly ApplicationDbContext _db;
+        private readonly ITicketsRepository _ticketRepository;
+        private readonly IPassengerRepository _passengerRepository;
 
-        public TicketService(ApplicationDbContext db)
+        public TicketService(ITicketsRepository ticketRepository, IPassengerRepository passengerRepository)
         {
-            _db = db;
+            _ticketRepository = ticketRepository;
+            _passengerRepository = passengerRepository;
         }
 
         public List<Ticket> GetTickets()
         {
-            return _db.Tickets.ToList();
+            return _ticketRepository.GetAll();
         }
 
         public Ticket GetTicket(int id)
         {
-            return _db.Tickets.FirstOrDefault(x => x.Id == id)!;
+            return _ticketRepository.GetById(id);
         }
 
         public List<FrequentFliersDto> FrequentFliers()
         {
             var results = new List<FrequentFliersDto>();
-            var passengerIds = _db.Tickets.Select(x => x.PassengerId).ToList();
+            var passengerIds = _ticketRepository.GetAll().Select(x => x.PassengerId).ToList();
             var keyValuePairs = passengerIds.GroupBy(x => x)
                 .ToDictionary(x => x.Key, x => x.Select(y => y)
                     .Count()).Take(5).OrderByDescending(x => x.Value);
 
             foreach (var keyValuePair in keyValuePairs)
             {
-                var passenger = _db.Passengers.FirstOrDefault(x => x.Id == keyValuePair.Value);
+                var passenger = _passengerRepository.GetAll().FirstOrDefault(x => x.Id == keyValuePair.Value);
                 if (passenger == null) continue;
 
                 var fullName = passenger.FirstName + " " + passenger.LastName;
