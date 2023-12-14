@@ -9,38 +9,38 @@ namespace FlightsAPI.Controllers
     [Route(Endpoints.BasePlanesEndpoint)]
     public class PlanesController : ControllerBase
     {
-        private readonly IPlaneService _planeService;
+        private readonly IPlanesService _planesService;
 
-        public PlanesController(IPlaneService planeService)
+        public PlanesController(IPlanesService planesService)
         {
-            _planeService = planeService;
+            _planesService = planesService;
         }
 
         [HttpGet]
         public List<Plane> GetPlanes()
         {
-            return _planeService.GetPlanes();
+            return _planesService.GetPlanes();
         }
 
         [HttpGet]
         [Route("{id:int}")]
         public Plane GetPlane(int id)
         {
-            return _planeService.GetPlane(id);
+            return _planesService.GetPlane(id);
         }
 
         [HttpGet]
         [Route(Endpoints.SeatsEndpoint)]
         public Plane GetMostSeats()
         {
-            return _planeService.GetMostSeats();
+            return _planesService.GetMostSeats();
         }
 
         [HttpGet]
         [Route(Endpoints.RangeEndpoint)]
         public Plane GetMostRange()
         {
-            return _planeService.GetBiggestRange();
+            return _planesService.GetBiggestRange();
         }
     }
 }

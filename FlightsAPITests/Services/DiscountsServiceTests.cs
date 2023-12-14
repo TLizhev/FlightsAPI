@@ -12,14 +12,14 @@ namespace FlightsAPITests.Services;
 public class DiscountsServiceTests
 {
     private readonly Mock<ITicketsRepository> _ticketsRepository;
-    private readonly DiscountService _sut;
+    private readonly DiscountsService _sut;
     private readonly Fixture _fixture;
 
     public DiscountsServiceTests()
     {
         _fixture = new Fixture();
         _ticketsRepository = new Mock<ITicketsRepository>();
-        _sut = new DiscountService(_ticketsRepository.Object);
+        _sut = new DiscountsService(_ticketsRepository.Object);
     }
 
     [Theory]

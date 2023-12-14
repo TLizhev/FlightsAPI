@@ -8,17 +8,19 @@ namespace FlightsAPI.Controllers
     [Route(Endpoints.BaseDiscountsEndpoint)]
     public class DiscountsController : ControllerBase
     {
-        private readonly IDiscountService _discountService;
+        private readonly IDiscountsService _discountsService;
 
-        public DiscountsController(IDiscountService discountService)
+        public DiscountsController(IDiscountsService discountsService)
         {
-            _discountService = discountService;
+            _discountsService = discountsService;
         }
 
         [HttpGet]
-        public int GetDiscount(int passengerId)
+        [ProducesResponseType(200)]
+        public IActionResult GetDiscount(int passengerId)
         {
-            return _discountService.CalculateDiscount(passengerId);
+            var discount = _discountsService.CalculateDiscount(passengerId);
+            return Ok(discount);
         }
     }
 }

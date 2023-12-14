@@ -8,17 +8,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IFlightsService, FlightsService>();
 builder.Services.AddScoped<ILuggageService, LuggageService>();
-builder.Services.AddScoped<IPassengerService, PassengerService>();
-builder.Services.AddScoped<IPlaneService, PlaneService>();
-builder.Services.AddScoped<ITicketService, TicketService>();
-builder.Services.AddScoped<IDiscountService, DiscountService>();
-builder.Services.AddScoped<IFlightRepository, FlightRepository>();
+builder.Services.AddScoped<IPassengersService, PassengersService>();
+builder.Services.AddScoped<IPlanesService, PlanesService>();
+builder.Services.AddScoped<ITicketsService, TicketsService>();
+builder.Services.AddScoped<IDiscountsService, DiscountsService>();
+builder.Services.AddScoped<IFlightsRepository, FlightsRepository>();
 builder.Services.AddScoped<ILuggageRepository, LuggageRepository>();
+builder.Services.AddScoped<IPassengersRepository, PassengersRepository>();
+builder.Services.AddScoped<ITicketsRepository, TicketsRepository>();
 
 var app = builder.Build();
 

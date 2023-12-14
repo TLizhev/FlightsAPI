@@ -3,11 +3,11 @@ using FlightsAPI.Data.Models;
 
 namespace FlightsAPI.Repositories
 {
-    public class PassengerRepository : IPassengerRepository
+    public class PassengersRepository : IPassengersRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public PassengerRepository(ApplicationDbContext db)
+        public PassengersRepository(ApplicationDbContext db)
         {
             _db = db;
         }

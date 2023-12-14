@@ -2,7 +2,7 @@
 
 namespace FlightsAPI.Services
 {
-    public interface IPlaneService
+    public interface IPlanesService
     {
         List<Plane> GetPlanes();
         Plane GetPlane(int id);

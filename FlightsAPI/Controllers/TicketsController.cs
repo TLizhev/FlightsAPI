@@ -9,31 +9,31 @@ namespace FlightsAPI.Controllers
     [Route(Endpoints.BaseTicketsEndpoint)]
     public class TicketsController : ControllerBase
     {
-        private readonly ITicketService _ticketService;
+        private readonly ITicketsService _ticketsService;
 
-        public TicketsController(ITicketService ticketService)
+        public TicketsController(ITicketsService ticketsService)
         {
-            _ticketService = ticketService;
+            _ticketsService = ticketsService;
         }
 
         [HttpGet]
         public List<Ticket> GetTickets()
         {
-            return _ticketService.GetTickets();
+            return _ticketsService.GetTickets();
         }
 
         [HttpGet]
         [Route("{id:int}")]
         public Ticket GetTicket(int id)
         {
-            return _ticketService.GetTicket(id);
+            return _ticketsService.GetTicket(id);
         }
 
         [HttpGet]
         [Route(Endpoints.FrequentFliersEndpoint)]
         public List<FrequentFliersDto> GetFrequentFliers()
         {
-            return _ticketService.FrequentFliers();
+            return _ticketsService.FrequentFliers();
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace FlightsAPI.Services
 {
-    public interface IPassengerService
+    public interface IPassengersService
     {
         List<Passenger> GetPassengers();
         Passenger GetPassenger(int id);

@@ -3,15 +3,15 @@ using FlightsAPI.Repositories;
 
 namespace FlightsAPI.Services
 {
-    public class TicketService : ITicketService
+    public class TicketsService : ITicketsService
     {
         private readonly ITicketsRepository _ticketRepository;
-        private readonly IPassengerRepository _passengerRepository;
+        private readonly IPassengersRepository _passengersRepository;
 
-        public TicketService(ITicketsRepository ticketRepository, IPassengerRepository passengerRepository)
+        public TicketsService(ITicketsRepository ticketRepository, IPassengersRepository passengersRepository)
         {
             _ticketRepository = ticketRepository;
-            _passengerRepository = passengerRepository;
+            _passengersRepository = passengersRepository;
         }
 
         public List<Ticket> GetTickets()
@@ -34,7 +34,7 @@ namespace FlightsAPI.Services
 
             foreach (var keyValuePair in keyValuePairs)
             {
-                var passenger = _passengerRepository.GetAll().FirstOrDefault(x => x.Id == keyValuePair.Value);
+                var passenger = _passengersRepository.GetAll().FirstOrDefault(x => x.Id == keyValuePair.Value);
                 if (passenger == null) continue;
 
                 var fullName = passenger.FirstName + " " + passenger.LastName;

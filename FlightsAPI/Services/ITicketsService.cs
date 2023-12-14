@@ -2,7 +2,7 @@
 
 namespace FlightsAPI.Services
 {
-    public interface ITicketService
+    public interface ITicketsService
     {
         public List<Ticket> GetTickets();
         public Ticket GetTicket(int id);

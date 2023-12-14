@@ -9,11 +9,11 @@ namespace FlightsAPI.Controllers
     [Route(Endpoints.BasePassengersEndpoint)]
     public class PassengerController : ControllerBase
     {
-        private readonly IPassengerService _passengerService;
+        private readonly IPassengersService _passengersService;
 
-        public PassengerController(IPassengerService passengerService)
+        public PassengerController(IPassengersService passengersService)
         {
-            _passengerService = passengerService;
+            _passengersService = passengersService;
         }
 
         [HttpGet]
@@ -21,7 +21,7 @@ namespace FlightsAPI.Controllers
         [ProducesResponseType(204)]
         public IActionResult GetPassengerList()
         {
-            var passengers = _passengerService.GetPassengers();
+            var passengers = _passengersService.GetPassengers();
 
             if (passengers is { Count: 0 })
                 return NoContent();
@@ -37,7 +37,7 @@ namespace FlightsAPI.Controllers
         {
             try
             {
-                var passenger = _passengerService.GetPassenger(id);
+                var passenger = _passengersService.GetPassenger(id);
                 return Ok(passenger);
             }
             catch (Exception e)
@@ -67,7 +67,7 @@ namespace FlightsAPI.Controllers
                     PassportId = passportId
                 };
 
-                await _passengerService.AddPassenger(passenger);
+                await _passengersService.AddPassenger(passenger);
                 return CreatedAtRoute("GetFlight", new { flightId = passenger.Id }, passenger);
             }
             catch (Exception e)
@@ -100,7 +100,7 @@ namespace FlightsAPI.Controllers
 
             try
             {
-                _passengerService.EditPassenger(newPassenger);
+                _passengersService.EditPassenger(newPassenger);
                 return Ok(newPassenger);
             }
             catch (Exception e)
@@ -117,7 +117,7 @@ namespace FlightsAPI.Controllers
         {
             try
             {
-                _passengerService.DeletePassenger(id);
+                _passengersService.DeletePassenger(id);
                 return NoContent();
             }
             catch (Exception e)

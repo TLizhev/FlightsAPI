@@ -2,7 +2,7 @@
 
 namespace FlightsAPI.Repositories
 {
-    public interface IFlightRepository : IRepository<Flight>
+    public interface IPassengersRepository : IRepository<Passenger>
     {
     }
 }

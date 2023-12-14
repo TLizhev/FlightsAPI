@@ -3,51 +3,51 @@ using FlightsAPI.Repositories;
 
 namespace FlightsAPI.Services
 {
-    public class PassengerService : IPassengerService
+    public class PassengersService : IPassengersService
     {
-        private readonly IPassengerRepository _passengerRepository;
+        private readonly IPassengersRepository _passengersRepository;
 
-        public PassengerService(IPassengerRepository passengerRepository)
+        public PassengersService(IPassengersRepository passengersRepository)
         {
-            _passengerRepository = passengerRepository;
+            _passengersRepository = passengersRepository;
         }
 
         public List<Passenger> GetPassengers()
         {
-            return _passengerRepository.GetAll();
+            return _passengersRepository.GetAll();
         }
 
         public Passenger GetPassenger(int id)
         {
-            return _passengerRepository.GetById(id) ??
+            return _passengersRepository.GetById(id) ??
                    throw new InvalidOperationException("A passenger with this id does not exist.");
         }
 
         public async Task AddPassenger(Passenger passenger)
         {
-            await _passengerRepository.AddAsync(passenger);
+            await _passengersRepository.AddAsync(passenger);
         }
 
         public void EditPassenger(Passenger newPassenger)
         {
-            var passenger = _passengerRepository.GetById(newPassenger.Id);
+            var passenger = _passengersRepository.GetById(newPassenger.Id);
 
             if (passenger is null)
                 throw new InvalidOperationException("Passenger with this id does not exist.");
 
             passenger = newPassenger;
 
-            _passengerRepository.Update(passenger);
+            _passengersRepository.Update(passenger);
         }
 
         public void DeletePassenger(int id)
         {
-            var passenger = _passengerRepository.GetById(id);
+            var passenger = _passengersRepository.GetById(id);
 
             if (passenger is null)
                 throw new InvalidOperationException("Passenger with this id does not exist.");
 
-            _passengerRepository.Delete(passenger);
+            _passengersRepository.Delete(passenger);
         }
     }
 }

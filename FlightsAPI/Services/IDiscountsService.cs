@@ -1,6 +1,6 @@
 ﻿namespace FlightsAPI.Services
 {
-    public interface IDiscountService
+    public interface IDiscountsService
     {
         int CalculateDiscount(int passengerId);
     }

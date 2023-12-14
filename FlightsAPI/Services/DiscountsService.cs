@@ -2,11 +2,11 @@
 
 namespace FlightsAPI.Services
 {
-    public class DiscountService : IDiscountService
+    public class DiscountsService : IDiscountsService
     {
         private readonly ITicketsRepository _ticketsRepository;
 
-        public DiscountService(ITicketsRepository ticketsRepository)
+        public DiscountsService(ITicketsRepository ticketsRepository)
         {
             _ticketsRepository = ticketsRepository;
         }

@@ -3,11 +3,11 @@ using FlightsAPI.Data.Models;
 
 namespace FlightsAPI.Services
 {
-    public class PlaneService : IPlaneService
+    public class PlanesService : IPlanesService
     {
         private readonly ApplicationDbContext _db;
 
-        public PlaneService(ApplicationDbContext db)
+        public PlanesService(ApplicationDbContext db)
         {
             _db = db;
         }

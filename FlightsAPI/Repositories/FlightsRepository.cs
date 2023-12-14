@@ -3,11 +3,11 @@ using FlightsAPI.Data.Models;
 
 namespace FlightsAPI.Repositories
 {
-    public class FlightRepository : IFlightRepository
+    public class FlightsRepository : IFlightsRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public FlightRepository(ApplicationDbContext db)
+        public FlightsRepository(ApplicationDbContext db)
         {
             _db = db;
         }

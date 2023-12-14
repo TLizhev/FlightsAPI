@@ -16,12 +16,12 @@ namespace FlightsAPITests.Services
     public class FlightsServiceTests
     {
         private readonly FlightsService _sut;
-        private readonly Mock<IFlightRepository> _flightsRepository;
+        private readonly Mock<IFlightsRepository> _flightsRepository;
         private readonly Fixture _fixture = new();
 
         public FlightsServiceTests()
         {
-            _flightsRepository = new Mock<IFlightRepository>();
+            _flightsRepository = new Mock<IFlightsRepository>();
             _sut = new FlightsService(_flightsRepository.Object);
         }
 
