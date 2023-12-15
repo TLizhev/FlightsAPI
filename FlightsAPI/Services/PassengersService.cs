@@ -23,9 +23,14 @@ namespace FlightsAPI.Services
                    throw new InvalidOperationException("A passenger with this id does not exist.");
         }
 
-        public async Task AddPassenger(Passenger passenger)
+        public async Task AddPassenger(Passenger newPassenger)
         {
-            await _passengersRepository.AddAsync(passenger);
+            var passenger = _passengersRepository.GetById(newPassenger.Id);
+
+            if (passenger is not null)
+                throw new InvalidOperationException("This passenger already exists.");
+     
+            await _passengersRepository.AddAsync(newPassenger);
         }
 
         public void EditPassenger(Passenger newPassenger)
