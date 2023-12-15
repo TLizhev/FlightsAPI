@@ -21,6 +21,7 @@ builder.Services.AddScoped<IFlightsRepository, FlightsRepository>();
 builder.Services.AddScoped<ILuggageRepository, LuggageRepository>();
 builder.Services.AddScoped<IPassengersRepository, PassengersRepository>();
 builder.Services.AddScoped<ITicketsRepository, TicketsRepository>();
+builder.Services.AddScoped<IPlanesRepository, PlanesRepository>();
 
 var app = builder.Build();
 

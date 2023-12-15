@@ -1,35 +1,66 @@
-﻿using FlightsAPI.Data;
-using FlightsAPI.Data.Models;
+﻿using FlightsAPI.Data.Models;
+using FlightsAPI.Repositories;
 
 namespace FlightsAPI.Services
 {
     public class PlanesService : IPlanesService
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IPlanesRepository _planesRepository;
 
-        public PlanesService(ApplicationDbContext db)
+        public PlanesService(IPlanesRepository planesRepository)
         {
-            _db = db;
+            _planesRepository = planesRepository;
         }
 
         public List<Plane> GetPlanes()
         {
-            return _db.Planes.ToList();
+            return _planesRepository.GetAll();
         }
 
         public Plane GetPlane(int id)
         {
-            return _db.Planes.FirstOrDefault(x => x.Id == id)!;
+            return _planesRepository.GetById(id) 
+                   ?? throw new InvalidOperationException("A plane with this id does not exist.");
         }
 
         public Plane GetMostSeats()
         {
-            return _db.Planes.ToList().MaxBy(x => x.Seats)!;
+            return _planesRepository.GetAll().MaxBy(x => x.Seats)!;
         }
 
         public Plane GetBiggestRange()
         {
-            return _db.Planes.ToList().MaxBy(x => x.Range)!;
+            return _planesRepository.GetAll().MaxBy(x => x.Range)!;
+        }
+
+        public async Task AddPlane(Plane newPlane)
+        {
+            var plane = _planesRepository.GetById(newPlane.Id);
+
+            if (plane is not null)
+                throw new InvalidOperationException("A plane with this id already exists.");
+
+            await _planesRepository.AddAsync(newPlane);
+        }
+
+        public void EditPlane(Plane newPlane)
+        {
+            var plane = _planesRepository.GetById(newPlane.Id);
+
+            if (plane is null)
+                throw new InvalidOperationException("A plane with this id does not exist.");
+
+            _planesRepository.Update(newPlane);
+        }
+
+        public void DeletePlane(int id)
+        {
+            var plane = _planesRepository.GetById(id);
+
+            if (plane is null)
+                throw new InvalidOperationException("A plane with this id does not exist.");
+
+            _planesRepository.Delete(plane);
         }
     }
 }

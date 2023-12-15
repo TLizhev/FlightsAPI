@@ -17,30 +17,113 @@ namespace FlightsAPI.Controllers
         }
 
         [HttpGet]
-        public List<Plane> GetPlanes()
+        [ProducesResponseType(typeof(IEnumerable<Plane>), 200)]
+        [ProducesResponseType(204)]
+        public IActionResult GetPlanes()
         {
-            return _planesService.GetPlanes();
+            var planes = _planesService.GetPlanes();
+
+            if (planes is { Count: 0 })
+                return NoContent();
+
+            return Ok(planes);
         }
 
         [HttpGet]
         [Route("{id:int}")]
-        public Plane GetPlane(int id)
+        [ProducesResponseType(typeof(Flight), 200)]
+        [ProducesResponseType(404)]
+        public IActionResult GetPlane(int id)
         {
-            return _planesService.GetPlane(id);
+            try
+            {
+                var flight = _planesService.GetPlane(id);
+                return Ok(flight);
+            }
+            catch (Exception)
+            {
+                return NotFound("A plane with this id does not exist.");
+            }
         }
 
         [HttpGet]
         [Route(Endpoints.SeatsEndpoint)]
-        public Plane GetMostSeats()
+        [ProducesResponseType(typeof(Plane), 200)]
+        public IActionResult GetMostSeats()
         {
-            return _planesService.GetMostSeats();
+            return Ok(_planesService.GetMostSeats());
         }
 
         [HttpGet]
         [Route(Endpoints.RangeEndpoint)]
-        public Plane GetMostRange()
+        [ProducesResponseType(typeof(Plane), 200)]
+        public IActionResult GetMostRange()
         {
-            return _planesService.GetBiggestRange();
+            return Ok(_planesService.GetBiggestRange());
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(Plane), 201)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> AddPlane(string name, int seats, int range)
+        {
+            try
+            {
+                var plane = new Plane
+                {
+                    Name = name,
+                    Seats = seats,
+                    Range = range
+                };
+
+                await _planesService.AddPlane(plane);
+                return CreatedAtRoute("GetPlane", new { planeId = plane.Id }, plane);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPatch]
+        [Route("{id:int}")]
+        [ProducesResponseType(typeof(Plane), 200)]
+        [ProducesResponseType(404)]
+        public IActionResult PatchFlight(int id, string name, int seats, int range)
+        {
+            var newPlane = new Plane
+            {
+                Id = id,
+                Name = name,
+                Seats = seats,
+                Range = range
+            };
+            try
+            {
+                _planesService.EditPlane(newPlane);
+                return Ok(newPlane);
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        [ProducesResponseType(typeof(Plane), 204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteFlight(int id)
+        {
+            try
+            {
+                _planesService.DeletePlane(id);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
         }
     }
 }
