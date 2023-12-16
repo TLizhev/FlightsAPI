@@ -31,14 +31,14 @@ namespace FlightsAPI.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        [ProducesResponseType(typeof(Flight), 200)]
+        [ProducesResponseType(typeof(Plane), 200)]
         [ProducesResponseType(404)]
         public IActionResult GetPlane(int id)
         {
             try
             {
-                var flight = _planesService.GetPlane(id);
-                return Ok(flight);
+                var plane = _planesService.GetPlane(id);
+                return Ok(plane);
             }
             catch (Exception)
             {
@@ -89,7 +89,7 @@ namespace FlightsAPI.Controllers
         [Route("{id:int}")]
         [ProducesResponseType(typeof(Plane), 200)]
         [ProducesResponseType(404)]
-        public IActionResult PatchFlight(int id, string name, int seats, int range)
+        public IActionResult PatchPlane(int id, string name, int seats, int range)
         {
             var newPlane = new Plane
             {
@@ -113,7 +113,7 @@ namespace FlightsAPI.Controllers
         [Route("{id:int}")]
         [ProducesResponseType(typeof(Plane), 204)]
         [ProducesResponseType(404)]
-        public IActionResult DeleteFlight(int id)
+        public IActionResult DeletePlane(int id)
         {
             try
             {
