@@ -21,7 +21,8 @@ namespace FlightsAPI.Services
 
         public Ticket GetTicket(int id)
         {
-            return _ticketRepository.GetById(id);
+            return _ticketRepository.GetById(id) ??
+                   throw new InvalidOperationException("A ticket with this id does not exist.");
         }
 
         public List<FrequentFliersDto> FrequentFliers()
@@ -34,14 +35,43 @@ namespace FlightsAPI.Services
 
             foreach (var keyValuePair in keyValuePairs)
             {
-                var passenger = _passengersRepository.GetAll().FirstOrDefault(x => x.Id == keyValuePair.Value);
-                if (passenger == null) continue;
+                var passenger = _passengersRepository.GetAll().FirstOrDefault(x => x.Id == keyValuePair.Key);
 
-                var fullName = passenger.FirstName + " " + passenger.LastName;
+                var fullName = passenger!.FirstName + " " + passenger.LastName;
                 results.Add(new FrequentFliersDto { FullName = fullName, Tickets = keyValuePair.Value });
             }
 
             return results;
+        }
+
+        public async Task AddTicket(Ticket newTicket)
+        {
+            var ticket = _ticketRepository.GetById(newTicket.Id);
+
+            if (ticket is not null)
+                throw new InvalidOperationException("This passenger already exists.");
+
+            await _ticketRepository.AddAsync(newTicket);
+        }
+
+        public void UpdateTicket(Ticket newTicket)
+        {
+            var ticket = _ticketRepository.GetById(newTicket.Id);
+
+            if (ticket is null)
+                throw new InvalidOperationException("Passenger with this id does not exist.");
+
+            _ticketRepository.Update(newTicket);
+        }
+
+        public void DeleteTicket(int id)
+        {
+            var ticket = _ticketRepository.GetById(id);
+
+            if (ticket is null)
+                throw new InvalidOperationException("Passenger with this id does not exist.");
+
+            _ticketRepository.Delete(ticket);
         }
     }
 }

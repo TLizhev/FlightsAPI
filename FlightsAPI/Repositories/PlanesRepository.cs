@@ -1,8 +1,10 @@
-﻿using FlightsAPI.Data;
+﻿using System.Diagnostics.CodeAnalysis;
+using FlightsAPI.Data;
 using FlightsAPI.Data.Models;
 
 namespace FlightsAPI.Repositories
 {
+    [ExcludeFromCodeCoverage]
     public class PlanesRepository : IPlanesRepository
     {
         private readonly ApplicationDbContext _db;

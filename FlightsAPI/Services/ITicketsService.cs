@@ -4,8 +4,11 @@ namespace FlightsAPI.Services
 {
     public interface ITicketsService
     {
-        public List<Ticket> GetTickets();
-        public Ticket GetTicket(int id);
-        public List<FrequentFliersDto> FrequentFliers();
+        List<Ticket> GetTickets();
+        Ticket GetTicket(int id);
+        List<FrequentFliersDto> FrequentFliers();
+        Task AddTicket(Ticket newTicket);
+        void UpdateTicket(Ticket ticket);
+        void DeleteTicket(int id);
     }
 }

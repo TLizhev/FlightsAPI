@@ -17,7 +17,7 @@ namespace FlightsAPI.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(Passenger), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Passenger>), 200)]
         [ProducesResponseType(204)]
         public IActionResult GetPassengerList()
         {

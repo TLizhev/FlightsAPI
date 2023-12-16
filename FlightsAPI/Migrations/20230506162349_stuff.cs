@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FlightsAPI.Migrations
 {
+    [ExcludeFromCodeCoverage]
     public partial class stuff : Migration
     {
         [ExcludeFromCodeCoverage]
