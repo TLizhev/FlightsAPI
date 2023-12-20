@@ -1,4 +1,4 @@
-﻿using FlightsAPI.Data.Models;
+﻿using FlightsAPI.Domain.Models;
 
 namespace FlightsAPI.Services
 {

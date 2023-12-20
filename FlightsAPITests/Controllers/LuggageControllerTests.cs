@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
 using FlightsAPI.Controllers;
-using FlightsAPI.Data.Models;
+using FlightsAPI.Domain.Models;
 using FlightsAPI.Services;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;

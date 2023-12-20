@@ -1,5 +1,5 @@
 ﻿using FlightsAPI.Data;
-using FlightsAPI.Data.Models;
+using FlightsAPI.Domain.Models;
 using FlightsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 

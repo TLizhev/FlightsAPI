@@ -1,7 +1,7 @@
-﻿using FlightsAPI.Data.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
+using FlightsAPI.Domain.Models;
 
 namespace FlightsAPI.Data
 {

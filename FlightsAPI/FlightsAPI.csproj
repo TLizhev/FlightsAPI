@@ -31,4 +31,8 @@
     <None Include="Properties\serviceDependencies.local.json.user" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FlightsAPI.Domain\FlightsAPI.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

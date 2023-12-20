@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
-using FlightsAPI.Data.Models;
+using FlightsAPI.Domain.Models;
 using FlightsAPI.Repositories;
 using FlightsAPI.Services;
 using FluentAssertions;

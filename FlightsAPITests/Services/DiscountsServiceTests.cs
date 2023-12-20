@@ -1,8 +1,8 @@
-﻿using FlightsAPI.Data.Models;
-using FlightsAPI.Services;
+﻿using FlightsAPI.Services;
 using Moq;
 using System.Linq;
 using AutoFixture;
+using FlightsAPI.Domain.Models;
 using FlightsAPI.Repositories;
 using FluentAssertions;
 using Xunit;

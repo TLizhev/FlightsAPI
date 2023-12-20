@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{E6B9A0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{7A64CBA6-3E5C-43EA-8390-DC4A030AB15C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightsAPI.Domain", "FlightsAPI.Domain\FlightsAPI.Domain.csproj", "{0C7A25C8-B262-4E93-A9DE-4D4E179A102D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{4BB7EA5F-DBA3-4B5E-89BA-A99EA0F89BB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BB7EA5F-DBA3-4B5E-89BA-A99EA0F89BB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BB7EA5F-DBA3-4B5E-89BA-A99EA0F89BB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C7A25C8-B262-4E93-A9DE-4D4E179A102D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C7A25C8-B262-4E93-A9DE-4D4E179A102D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C7A25C8-B262-4E93-A9DE-4D4E179A102D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C7A25C8-B262-4E93-A9DE-4D4E179A102D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +50,7 @@ Global
 		{C0910612-4713-40F0-935C-60770303F677} = {F33DB61C-4296-4FC1-A0C3-840AE732AD9D}
 		{E6B9A058-D03A-4FC2-B06F-1E7BF0E7C4E6} = {F33DB61C-4296-4FC1-A0C3-840AE732AD9D}
 		{7A64CBA6-3E5C-43EA-8390-DC4A030AB15C} = {F33DB61C-4296-4FC1-A0C3-840AE732AD9D}
+		{0C7A25C8-B262-4E93-A9DE-4D4E179A102D} = {E6B9A058-D03A-4FC2-B06F-1E7BF0E7C4E6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A02CA1CA-871D-4A07-9A46-D5A7FDEE75D2}

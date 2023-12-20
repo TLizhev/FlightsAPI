@@ -1,4 +1,4 @@
-﻿namespace FlightsAPI.Data.Models
+﻿namespace FlightsAPI.Domain.Models
 {
     public class Ticket
     {
