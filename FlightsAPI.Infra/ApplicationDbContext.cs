@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using FlightsAPI.Domain.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
-namespace FlightsAPI.Data
+namespace FlightsAPI.Infra
 {
     [ExcludeFromCodeCoverage]
     public class ApplicationDbContext : IdentityDbContext

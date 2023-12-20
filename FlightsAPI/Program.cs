@@ -1,4 +1,4 @@
-using FlightsAPI.Data;
+using FlightsAPI.Infra;
 using FlightsAPI.Repositories;
 using FlightsAPI.Services;
 

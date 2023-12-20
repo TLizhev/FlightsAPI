@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using FlightsAPI.Data;
 using FlightsAPI.Domain.Models;
+using FlightsAPI.Infra;
 
 namespace FlightsAPI.Repositories
 {

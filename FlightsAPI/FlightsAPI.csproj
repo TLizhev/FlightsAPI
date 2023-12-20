@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FlightsAPI.Domain\FlightsAPI.Domain.csproj" />
+    <ProjectReference Include="..\FlightsAPI.Infra\FlightsAPI.Infra.csproj" />
   </ItemGroup>
 
 </Project>
