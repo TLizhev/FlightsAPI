@@ -1,5 +1,4 @@
 ﻿using AutoFixture;
-using FlightsAPI.Repositories;
 using FlightsAPI.Services;
 using FluentAssertions;
 using Moq;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FlightsAPI.Application.Interfaces.Repositories;
 using FlightsAPI.Domain.Models;
 using Xunit;
 

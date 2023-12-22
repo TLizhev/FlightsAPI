@@ -1,4 +1,4 @@
-﻿namespace FlightsAPI.Repositories
+﻿namespace FlightsAPI.Application.Interfaces.Repositories
 {
     public interface IRepository<T>
     {

@@ -1,5 +1,5 @@
-﻿using FlightsAPI.Controllers;
-using FlightsAPI.Services;
+﻿using FlightsAPI.Application.Interfaces.Services;
+using FlightsAPI.Controllers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;

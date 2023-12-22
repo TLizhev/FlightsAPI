@@ -1,4 +1,5 @@
-﻿using FlightsAPI.Repositories;
+﻿using FlightsAPI.Application.Interfaces.Repositories;
+using FlightsAPI.Application.Interfaces.Services;
 
 namespace FlightsAPI.Services
 {

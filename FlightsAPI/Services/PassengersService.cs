@@ -1,5 +1,6 @@
-﻿using FlightsAPI.Domain.Models;
-using FlightsAPI.Repositories;
+﻿using FlightsAPI.Application.Interfaces.Repositories;
+using FlightsAPI.Application.Interfaces.Services;
+using FlightsAPI.Domain.Models;
 
 namespace FlightsAPI.Services
 {

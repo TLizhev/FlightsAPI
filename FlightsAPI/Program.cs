@@ -1,3 +1,5 @@
+using FlightsAPI.Application.Interfaces.Repositories;
+using FlightsAPI.Application.Interfaces.Services;
 using FlightsAPI.Infra;
 using FlightsAPI.Repositories;
 using FlightsAPI.Services;

@@ -1,5 +1,5 @@
-﻿using FlightsAPI.Data;
-using FlightsAPI.Services;
+﻿using FlightsAPI.Application.Interfaces.Services;
+using FlightsAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsAPI.Controllers

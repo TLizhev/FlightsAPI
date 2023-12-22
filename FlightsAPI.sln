@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightsAPI.Infra", "FlightsAPI.Infra\FlightsAPI.Infra.csproj", "{08FAEE47-9FCD-4681-878A-B29EE079A306}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightsAPI.Application", "FlightsAPI.Application\FlightsAPI.Application.csproj", "{01D3CBA8-1598-4582-9282-BD6F9FDB7D99}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{08FAEE47-9FCD-4681-878A-B29EE079A306}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08FAEE47-9FCD-4681-878A-B29EE079A306}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08FAEE47-9FCD-4681-878A-B29EE079A306}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01D3CBA8-1598-4582-9282-BD6F9FDB7D99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01D3CBA8-1598-4582-9282-BD6F9FDB7D99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01D3CBA8-1598-4582-9282-BD6F9FDB7D99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01D3CBA8-1598-4582-9282-BD6F9FDB7D99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,6 +64,7 @@ Global
 		{0C7A25C8-B262-4E93-A9DE-4D4E179A102D} = {E6B9A058-D03A-4FC2-B06F-1E7BF0E7C4E6}
 		{AAB02D9D-C1DA-4675-BCE3-58B1D4BA4554} = {F33DB61C-4296-4FC1-A0C3-840AE732AD9D}
 		{08FAEE47-9FCD-4681-878A-B29EE079A306} = {AAB02D9D-C1DA-4675-BCE3-58B1D4BA4554}
+		{01D3CBA8-1598-4582-9282-BD6F9FDB7D99} = {C0910612-4713-40F0-935C-60770303F677}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A02CA1CA-871D-4A07-9A46-D5A7FDEE75D2}

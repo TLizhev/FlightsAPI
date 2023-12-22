@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using FlightsAPI.Application.Interfaces.Repositories;
 using FlightsAPI.Domain.Models;
 using FlightsAPI.Infra;
 

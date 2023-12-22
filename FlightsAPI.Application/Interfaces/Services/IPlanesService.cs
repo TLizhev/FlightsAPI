@@ -1,6 +1,6 @@
 ﻿using FlightsAPI.Domain.Models;
 
-namespace FlightsAPI.Services
+namespace FlightsAPI.Application.Interfaces.Services
 {
     public interface IPlanesService
     {

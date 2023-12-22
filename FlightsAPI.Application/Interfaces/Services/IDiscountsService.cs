@@ -1,4 +1,4 @@
-﻿namespace FlightsAPI.Services
+﻿namespace FlightsAPI.Application.Interfaces.Services
 {
     public interface IDiscountsService
     {
