@@ -1,9 +1,8 @@
 ﻿using FlightsAPI.Domain.Models;
 
-namespace FlightsAPI.Application.Interfaces.Repositories
+namespace FlightsAPI.Application.Interfaces.Repositories;
+
+public interface ILuggageRepository : IRepository<Luggage>
 {
-    public interface ILuggageRepository : IRepository<Luggage>
-    {
-        List<LuggageType> GetLuggageTypes();
-    }
+    List<LuggageType> GetLuggageTypes();
 }

@@ -1,10 +1,10 @@
-﻿using FlightsAPI.Services;
-using Moq;
-using System.Linq;
+﻿using System.Linq;
 using AutoFixture;
 using FlightsAPI.Application.Interfaces.Repositories;
 using FlightsAPI.Domain.Models;
+using FlightsAPI.Services;
 using FluentAssertions;
+using Moq;
 using Xunit;
 
 namespace FlightsAPITests.Services;

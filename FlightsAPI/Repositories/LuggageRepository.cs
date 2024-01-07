@@ -3,49 +3,48 @@ using FlightsAPI.Application.Interfaces.Repositories;
 using FlightsAPI.Domain.Models;
 using FlightsAPI.Infra;
 
-namespace FlightsAPI.Repositories
+namespace FlightsAPI.Repositories;
+
+[ExcludeFromCodeCoverage]
+public class LuggageRepository : ILuggageRepository
 {
-    [ExcludeFromCodeCoverage]
-    public class LuggageRepository : ILuggageRepository
+    private readonly ApplicationDbContext _db;
+
+    public LuggageRepository(ApplicationDbContext db)
     {
-        private readonly ApplicationDbContext _db;
+        _db = db;
+    }
 
-        public LuggageRepository(ApplicationDbContext db)
-        {
-            _db = db;
-        }
+    public async Task AddAsync(Luggage luggage)
+    {
+        await _db.Luggages.AddAsync(luggage);
+        await _db.SaveChangesAsync();
+    }
 
-        public async Task AddAsync(Luggage luggage)
-        {
-            await _db.Luggages.AddAsync(luggage);
-            await _db.SaveChangesAsync();
-        }
+    public void Delete(Luggage luggage)
+    {
+        _db.Luggages.Remove(luggage);
+        _db.SaveChanges();
+    }
 
-        public void Delete(Luggage luggage)
-        {
-            _db.Luggages.Remove(luggage);
-            _db.SaveChanges();
-        }
+    public List<Luggage> GetAll()
+    {
+        return _db.Luggages.ToList();
+    }
 
-        public List<Luggage> GetAll()
-        {
-            return _db.Luggages.ToList();
-        }
+    public Luggage GetById(int id)
+    {
+        return _db.Luggages.SingleOrDefault(x => x.Id == id)!;
+    }
 
-        public Luggage GetById(int id)
-        {
-            return _db.Luggages.SingleOrDefault(x => x.Id == id)!;
-        }
+    public void Update(Luggage luggage)
+    {
+        _db.Luggages.Update(luggage);
+        _db.SaveChanges();
+    }
 
-        public void Update(Luggage luggage)
-        {
-            _db.Luggages.Update(luggage);
-            _db.SaveChanges();
-        }
-
-        public List<LuggageType> GetLuggageTypes()
-        {
-            return _db.LuggageTypes.ToList();
-        }
+    public List<LuggageType> GetLuggageTypes()
+    {
+        return _db.LuggageTypes.ToList();
     }
 }

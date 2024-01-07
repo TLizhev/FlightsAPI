@@ -1,8 +1,7 @@
-﻿namespace FlightsAPI.Domain.Models
+﻿namespace FlightsAPI.Domain.Models;
+
+public class LuggageType
 {
-    public class LuggageType
-    {
-        public int Id { get; set; }
-        public string Type { get; set; } = null!;
-    }
+    public int Id { get; set; }
+    public string Type { get; set; } = null!;
 }

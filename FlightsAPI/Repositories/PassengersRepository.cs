@@ -3,44 +3,43 @@ using FlightsAPI.Application.Interfaces.Repositories;
 using FlightsAPI.Domain.Models;
 using FlightsAPI.Infra;
 
-namespace FlightsAPI.Repositories
+namespace FlightsAPI.Repositories;
+
+[ExcludeFromCodeCoverage]
+public class PassengersRepository : IPassengersRepository
 {
-    [ExcludeFromCodeCoverage]
-    public class PassengersRepository : IPassengersRepository
+    private readonly ApplicationDbContext _db;
+
+    public PassengersRepository(ApplicationDbContext db)
     {
-        private readonly ApplicationDbContext _db;
+        _db = db;
+    }
 
-        public PassengersRepository(ApplicationDbContext db)
-        {
-            _db = db;
-        }
+    public Passenger GetById(int id)
+    {
+        return _db.Passengers.FirstOrDefault(x => x.Id == id)!;
+    }
 
-        public Passenger GetById(int id)
-        {
-            return _db.Passengers.FirstOrDefault(x => x.Id == id)!;
-        }
+    public List<Passenger> GetAll()
+    {
+        return _db.Passengers.ToList();
+    }
 
-        public List<Passenger> GetAll()
-        {
-            return _db.Passengers.ToList();
-        }
+    public async Task AddAsync(Passenger entity)
+    {
+        await _db.AddAsync(entity);
+        await _db.SaveChangesAsync();
+    }
 
-        public async Task AddAsync(Passenger entity)
-        {
-            await _db.AddAsync(entity);
-            await _db.SaveChangesAsync();
-        }
+    public void Update(Passenger entity)
+    {
+        _db.Update(entity);
+        _db.SaveChanges();
+    }
 
-        public void Update(Passenger entity)
-        {
-            _db.Update(entity);
-            _db.SaveChanges();
-        }
-
-        public void Delete(Passenger entity)
-        {
-            _db.Remove(entity);
-            _db.SaveChanges();
-        }
+    public void Delete(Passenger entity)
+    {
+        _db.Remove(entity);
+        _db.SaveChanges();
     }
 }

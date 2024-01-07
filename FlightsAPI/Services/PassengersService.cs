@@ -2,58 +2,57 @@
 using FlightsAPI.Application.Interfaces.Services;
 using FlightsAPI.Domain.Models;
 
-namespace FlightsAPI.Services
+namespace FlightsAPI.Services;
+
+public class PassengersService : IPassengersService
 {
-    public class PassengersService : IPassengersService
+    private readonly IPassengersRepository _passengersRepository;
+
+    public PassengersService(IPassengersRepository passengersRepository)
     {
-        private readonly IPassengersRepository _passengersRepository;
+        _passengersRepository = passengersRepository;
+    }
 
-        public PassengersService(IPassengersRepository passengersRepository)
-        {
-            _passengersRepository = passengersRepository;
-        }
+    public List<Passenger> GetPassengers()
+    {
+        return _passengersRepository.GetAll();
+    }
 
-        public List<Passenger> GetPassengers()
-        {
-            return _passengersRepository.GetAll();
-        }
+    public Passenger GetPassenger(int id)
+    {
+        return _passengersRepository.GetById(id) ??
+               throw new InvalidOperationException("A passenger with this id does not exist.");
+    }
 
-        public Passenger GetPassenger(int id)
-        {
-            return _passengersRepository.GetById(id) ??
-                   throw new InvalidOperationException("A passenger with this id does not exist.");
-        }
+    public async Task AddPassenger(Passenger newPassenger)
+    {
+        var passenger = _passengersRepository.GetById(newPassenger.Id);
 
-        public async Task AddPassenger(Passenger newPassenger)
-        {
-            var passenger = _passengersRepository.GetById(newPassenger.Id);
-
-            if (passenger is not null)
-                throw new InvalidOperationException("This passenger already exists.");
+        if (passenger is not null)
+            throw new InvalidOperationException("This passenger already exists.");
      
-            await _passengersRepository.AddAsync(newPassenger);
-        }
+        await _passengersRepository.AddAsync(newPassenger);
+    }
 
-        public void EditPassenger(Passenger newPassenger)
-        {
-            var passenger = _passengersRepository.GetById(newPassenger.Id);
+    public void EditPassenger(Passenger newPassenger)
+    {
+        var passenger = _passengersRepository.GetById(newPassenger.Id);
 
-            if (passenger is null)
-                throw new InvalidOperationException("Passenger with this id does not exist.");
+        if (passenger is null)
+            throw new InvalidOperationException("Passenger with this id does not exist.");
 
-            passenger = newPassenger;
+        passenger = newPassenger;
 
-            _passengersRepository.Update(passenger);
-        }
+        _passengersRepository.Update(passenger);
+    }
 
-        public void DeletePassenger(int id)
-        {
-            var passenger = _passengersRepository.GetById(id);
+    public void DeletePassenger(int id)
+    {
+        var passenger = _passengersRepository.GetById(id);
 
-            if (passenger is null)
-                throw new InvalidOperationException("Passenger with this id does not exist.");
+        if (passenger is null)
+            throw new InvalidOperationException("Passenger with this id does not exist.");
 
-            _passengersRepository.Delete(passenger);
-        }
+        _passengersRepository.Delete(passenger);
     }
 }

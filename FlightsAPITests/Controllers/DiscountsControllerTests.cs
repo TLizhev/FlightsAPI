@@ -5,28 +5,27 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace FlightsAPITests.Controllers
+namespace FlightsAPITests.Controllers;
+
+public class DiscountsControllerTests
 {
-    public class DiscountsControllerTests
+    private readonly DiscountsController _sut;
+    private readonly Mock<IDiscountsService> _discountsService;
+
+    public DiscountsControllerTests()
     {
-        private readonly DiscountsController _sut;
-        private readonly Mock<IDiscountsService> _discountsService;
+        _discountsService = new Mock<IDiscountsService>();
+        _sut = new DiscountsController(_discountsService.Object);
+    }
 
-        public DiscountsControllerTests()
-        {
-            _discountsService = new Mock<IDiscountsService>();
-            _sut = new DiscountsController(_discountsService.Object);
-        }
-
-        [Fact]
-        public void GetDiscountReturnsOk()
-        {
-            // Arrange
-            _discountsService.Setup(x => x.CalculateDiscount(It.IsAny<int>())).Returns(5);
-            // Act
-            var result = _sut.GetDiscount(It.IsAny<int>());
-            // Assert
-            result.Should().BeOfType<OkObjectResult>();
-        }
+    [Fact]
+    public void GetDiscountReturnsOk()
+    {
+        // Arrange
+        _discountsService.Setup(x => x.CalculateDiscount(It.IsAny<int>())).Returns(5);
+        // Act
+        var result = _sut.GetDiscount(It.IsAny<int>());
+        // Assert
+        result.Should().BeOfType<OkObjectResult>();
     }
 }

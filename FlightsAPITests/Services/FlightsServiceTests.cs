@@ -1,203 +1,203 @@
-﻿using AutoFixture;
-using FlightsAPI.Services;
-using FluentAssertions;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoFixture;
+using FlightsAPI.Services;
+using FluentAssertions;
 using FlightsAPI.Application.Interfaces.Repositories;
 using FlightsAPI.Domain.Models;
+using Moq;
 using Xunit;
 
-namespace FlightsAPITests.Services
+namespace FlightsAPITests.Services;
+
+public class FlightsServiceTests
 {
-    public class FlightsServiceTests
+    private readonly FlightsService _sut;
+    private readonly Mock<IFlightsRepository> _flightsRepository;
+    private readonly Fixture _fixture = new();
+
+    public FlightsServiceTests()
     {
-        private readonly FlightsService _sut;
-        private readonly Mock<IFlightsRepository> _flightsRepository;
-        private readonly Fixture _fixture = new();
+        _flightsRepository = new Mock<IFlightsRepository>();
+        _sut = new FlightsService(_flightsRepository.Object);
+    }
 
-        public FlightsServiceTests()
+    [Fact]
+    public async Task AddFlightReturnsThrowsWhenParametersAreInvalid()
+    {
+        // Arrange
+        var flight = _fixture.Create<Flight>();
+        flight.Destination = "";
+
+        // Act
+        var result = async () => await _sut.AddFlight(flight);
+
+        await result.Should().ThrowAsync<InvalidDataException>();
+    }
+
+    [Fact]
+    public async Task AddFlightWorksWhenParametersAreValid()
+    {
+        // Arrange
+        var flight = _fixture.Create<Flight>();
+        _flightsRepository.Setup(x => x.GetAll()).Returns(new List<Flight>());
+
+        // Act
+        await _sut.AddFlight(flight);
+
+        // Assert
+        _flightsRepository.Verify(x => x.AddAsync(It.IsAny<Flight>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task AddFlightThrowsWhenFlightAlreadyExists()
+    {
+        // Arrange
+        var flight = new Flight
         {
-            _flightsRepository = new Mock<IFlightsRepository>();
-            _sut = new FlightsService(_flightsRepository.Object);
-        }
+            ArrivalTime = new DateTime(2023, 11, 30, 12, 00, 00),
+            DepartureTime = new DateTime(2023, 11, 30, 10, 30, 00),
+            Id = 0,
+            Destination = "City A",
+            Origin = "City B",
+            PlaneId = 1
+        };
 
-        [Fact]
-        public async Task AddFlightReturnsThrowsWhenParametersAreInvalid()
-        {
-            // Arrange
-            var flight = _fixture.Create<Flight>();
-            flight.Destination = "";
+        var flights = new List<Flight>() { flight, flight };
+        _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
 
-            // Act
-            var result = async () => await _sut.AddFlight(flight);
+        // Act
+        var result = async () => await _sut.AddFlight(flight);
 
-            await result.Should().ThrowAsync<InvalidDataException>();
-        }
+        await result.Should().ThrowAsync<InvalidOperationException>();
+    }
 
-        [Fact]
-        public async Task AddFlightWorksWhenParametersAreValid()
-        {
-            // Arrange
-            var flight = _fixture.Create<Flight>();
-            _flightsRepository.Setup(x => x.GetAll()).Returns(new List<Flight>());
+    [Fact]
+    public void GetFlightReturnsCorrectFlight()
+    {
+        // Arrange
+        var flight = _fixture.Create<Flight>();
+        _flightsRepository.Setup(x => x.GetById(It.IsAny<int>())).Returns(flight);
 
-            // Act
-            await _sut.AddFlight(flight);
+        // Act
+        var result = _sut.GetFlight(flight.Id);
 
-            // Assert
-            _flightsRepository.Verify(x => x.AddAsync(It.IsAny<Flight>()), Times.Once);
-        }
+        // Assert
+        result.Id.Should().Be(flight.Id);
+    }
 
-        [Fact]
-        public async Task AddFlightThrowsWhenFlightAlreadyExists()
-        {
-            // Arrange
-            var flight = new Flight
-            {
-                ArrivalTime = new DateTime(2023, 11, 30, 12, 00, 00),
-                DepartureTime = new DateTime(2023, 11, 30, 10, 30, 00),
-                Id = 0,
-                Destination = "City A",
-                Origin = "City B",
-                PlaneId = 1
-            };
+    [Fact]
+    public void GetFlightThrowsWhenFlightDoesNotExist()
+    {
+        // Arrange
+        var flight = _fixture.Create<Flight>();
+        _flightsRepository.Setup(x => x.GetById(It.IsAny<int>())).Throws<InvalidOperationException>();
 
-            var flights = new List<Flight>() { flight, flight };
-            _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
+        // Act
+        var result = () => _sut.GetFlight(flight.Id);
 
-            // Act
-            var result = async () => await _sut.AddFlight(flight);
+        // Assert
+        result.Should().Throw<InvalidOperationException>();
+    }
 
-            await result.Should().ThrowAsync<InvalidOperationException>();
-        }
+    [Fact]
+    public void GetFlightsReturnsFlights()
+    {
+        // Arrange
+        var flights = _fixture.CreateMany<Flight>().ToList();
+        _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
 
-        [Fact]
-        public void GetFlightReturnsCorrectFlight()
-        {
-            // Arrange
-            var flight = _fixture.Create<Flight>();
-            _flightsRepository.Setup(x => x.GetById(It.IsAny<int>())).Returns(flight);
+        // Act
+        var result = _sut.GetFlights();
 
-            // Act
-            var result = _sut.GetFlight(flight.Id);
+        // Assert
+        result.Should().BeEquivalentTo(flights);
+        result.Count.Should().Be(3);
+    }
 
-            // Assert
-            result.Id.Should().Be(flight.Id);
-        }
+    [Fact]
+    public void EditFlightReturnsOkWhenFlightExists()
+    {
+        // Arrange
+        var flights = _fixture.CreateMany<Flight>().ToList();
+        var flight = flights[0];
+        flight.Id = 5;
 
-        [Fact]
-        public void GetFlightThrowsWhenFlightDoesNotExist()
-        {
-            // Arrange
-            var flight = _fixture.Create<Flight>();
-            _flightsRepository.Setup(x => x.GetById(It.IsAny<int>())).Throws<InvalidOperationException>();
+        _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
 
-            // Act
-            var result = () => _sut.GetFlight(flight.Id);
+        // Act
+        _sut.EditFlight(flight);
 
-            // Assert
-            result.Should().Throw<InvalidOperationException>();
-        }
+        // Assert
+        _flightsRepository.Verify(x => x.Update(flight), Times.Once);
+    }
 
-        [Fact]
-        public void GetFlightsReturnsFlights()
-        {
-            // Arrange
-            var flights = _fixture.CreateMany<Flight>().ToList();
-            _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
+    [Fact]
+    public void EditFlightThrowsWhenFlightDoesNotExist()
+    {
+        // Arrange
+        _flightsRepository.Setup(x => x.GetAll()).Returns(new List<Flight>());
 
-            // Act
-            var result = _sut.GetFlights();
+        // Act
+        var result = () => _sut.EditFlight(new Flight());
 
-            // Assert
-            result.Should().BeEquivalentTo(flights);
-            result.Count.Should().Be(3);
-        }
+        // Assert
+        result.Should().Throw<InvalidDataException>();
+    }
 
-        [Fact]
-        public void EditFlightReturnsOkWhenFlightExists()
-        {
-            // Arrange
-            var flights = _fixture.CreateMany<Flight>().ToList();
-            var flight = flights[0];
-            flight.Id = 5;
+    [Fact]
+    public void DeleteFlightReturnsOkWhenFlightExists()
+    {
+        // Arrange
+        var flight = _fixture.Create<Flight>();
 
-            _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
+        _flightsRepository.Setup(x => x.GetById(flight.Id)).Returns(flight);
 
-            // Act
-            _sut.EditFlight(flight);
+        // Act
+        _sut.DeleteFlight(flight.Id);
 
-            // Assert
-            _flightsRepository.Verify(x => x.Update(flight), Times.Once);
-        }
+        // Assert
+        _flightsRepository.Verify(x => x.Delete(flight), Times.Once);
+    }
 
-        [Fact]
-        public void EditFlightThrowsWhenFlightDoesNotExist()
-        {
-            // Arrange
-            _flightsRepository.Setup(x => x.GetAll()).Returns(new List<Flight>());
+    [Fact]
+    public void DeleteFlightThrowsWhenFlightDoesNotExist()
+    {
+        // Arrange
+        _flightsRepository.Setup(x => x.GetAll()).Returns(new List<Flight>());
 
-            // Act
-            var result = () => _sut.EditFlight(new Flight());
+        // Act
+        var result = () => _sut.DeleteFlight(It.IsAny<int>());
 
-            // Assert
-            result.Should().Throw<InvalidDataException>();
-        }
+        result.Should().Throw<InvalidOperationException>();
+        _flightsRepository.Verify(x => x.Delete(It.IsAny<Flight>()), Times.Never);
+    }
 
-        [Fact]
-        public void DeleteFlightReturnsOkWhenFlightExists()
-        {
-            // Arrange
-            var flight = _fixture.Create<Flight>();
+    [Fact]
+    public void GetTopFiveOriginsReturnsCorrectResult()
+    {
+        // Arrange
+        var liverpoolFlights = _fixture.Build<Flight>().With(x => x.Origin, "Liverpool").CreateMany(2).ToList();
+        var manchesterFlights = _fixture.Build<Flight>().With(x => x.Origin, "Manchester").CreateMany(2).ToList();
+        var varnaFlights = _fixture.Build<Flight>().With(x => x.Origin, "Varna").CreateMany(5).ToList();
+        var sofiaFlights = _fixture.Build<Flight>().With(x => x.Origin, "Sofia").CreateMany(4).ToList();
+        var londonFlights = _fixture.Build<Flight>().With(x => x.Origin, "London").CreateMany(3).ToList();
+        var lutonFlights = _fixture.Build<Flight>().With(x => x.Origin, "Luton").CreateMany(2).ToList();
 
-            _flightsRepository.Setup(x => x.GetById(flight.Id)).Returns(flight);
+        var flights = varnaFlights
+            .Concat(sofiaFlights)
+            .Concat(londonFlights)
+            .Concat(liverpoolFlights)
+            .Concat(manchesterFlights)
+            .Concat(lutonFlights)
+            .ToList();
 
-            // Act
-            _sut.DeleteFlight(flight.Id);
+        _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
 
-            // Assert
-            _flightsRepository.Verify(x => x.Delete(flight), Times.Once);
-        }
-
-        [Fact]
-        public void DeleteFlightThrowsWhenFlightDoesNotExist()
-        {
-            // Arrange
-            _flightsRepository.Setup(x => x.GetAll()).Returns(new List<Flight>());
-
-            // Act
-            var result = () => _sut.DeleteFlight(It.IsAny<int>());
-
-            result.Should().Throw<InvalidOperationException>();
-            _flightsRepository.Verify(x => x.Delete(It.IsAny<Flight>()), Times.Never);
-        }
-
-        [Fact]
-        public void GetTopFiveOriginsReturnsCorrectResult()
-        {
-            // Arrange
-            var liverpoolFlights = _fixture.Build<Flight>().With(x => x.Origin, "Liverpool").CreateMany(2).ToList();
-            var manchesterFlights = _fixture.Build<Flight>().With(x => x.Origin, "Manchester").CreateMany(2).ToList();
-            var varnaFlights = _fixture.Build<Flight>().With(x => x.Origin, "Varna").CreateMany(5).ToList();
-            var sofiaFlights = _fixture.Build<Flight>().With(x => x.Origin, "Sofia").CreateMany(4).ToList();
-            var londonFlights = _fixture.Build<Flight>().With(x => x.Origin, "London").CreateMany(3).ToList();
-            var lutonFlights = _fixture.Build<Flight>().With(x => x.Origin, "Luton").CreateMany(2).ToList();
-
-            var flights = varnaFlights
-                .Concat(sofiaFlights)
-                .Concat(londonFlights)
-                .Concat(liverpoolFlights)
-                .Concat(manchesterFlights)
-                .Concat(lutonFlights)
-                .ToList();
-
-            _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
-
-            var expected = new List<TopFiveDto>()
+        var expected = new List<TopFiveDto>()
             {
                 new()
                 {
@@ -226,34 +226,34 @@ namespace FlightsAPITests.Services
                 },
             };
 
-            // Act
-            var result = _sut.GetTopFiveFlightOrigins();
+        // Act
+        var result = _sut.GetTopFiveFlightOrigins();
 
-            result.Should().BeEquivalentTo(expected);
-        }
+        result.Should().BeEquivalentTo(expected);
+    }
 
-        [Fact]
-        public void GetTopFiveDestinationsReturnsCorrectResult()
-        {
-            // Arrange
-            var liverpoolFlights = _fixture.Build<Flight>().With(x => x.Destination, "Liverpool").CreateMany(2).ToList();
-            var manchesterFlights = _fixture.Build<Flight>().With(x => x.Destination, "Manchester").CreateMany(2).ToList();
-            var varnaFlights = _fixture.Build<Flight>().With(x => x.Destination, "Varna").CreateMany(5).ToList();
-            var sofiaFlights = _fixture.Build<Flight>().With(x => x.Destination, "Sofia").CreateMany(4).ToList();
-            var londonFlights = _fixture.Build<Flight>().With(x => x.Destination, "London").CreateMany(3).ToList();
-            var lutonFlights = _fixture.Build<Flight>().With(x => x.Destination, "Luton").CreateMany(2).ToList();
+    [Fact]
+    public void GetTopFiveDestinationsReturnsCorrectResult()
+    {
+        // Arrange
+        var liverpoolFlights = _fixture.Build<Flight>().With(x => x.Destination, "Liverpool").CreateMany(2).ToList();
+        var manchesterFlights = _fixture.Build<Flight>().With(x => x.Destination, "Manchester").CreateMany(2).ToList();
+        var varnaFlights = _fixture.Build<Flight>().With(x => x.Destination, "Varna").CreateMany(5).ToList();
+        var sofiaFlights = _fixture.Build<Flight>().With(x => x.Destination, "Sofia").CreateMany(4).ToList();
+        var londonFlights = _fixture.Build<Flight>().With(x => x.Destination, "London").CreateMany(3).ToList();
+        var lutonFlights = _fixture.Build<Flight>().With(x => x.Destination, "Luton").CreateMany(2).ToList();
 
-            var flights = varnaFlights
-                .Concat(sofiaFlights)
-                .Concat(londonFlights)
-                .Concat(liverpoolFlights)
-                .Concat(manchesterFlights)
-                .Concat(lutonFlights)
-                .ToList();
+        var flights = varnaFlights
+            .Concat(sofiaFlights)
+            .Concat(londonFlights)
+            .Concat(liverpoolFlights)
+            .Concat(manchesterFlights)
+            .Concat(lutonFlights)
+            .ToList();
 
-            _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
+        _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
 
-            var expected = new List<TopFiveDto>()
+        var expected = new List<TopFiveDto>()
             {
                 new()
                 {
@@ -282,48 +282,82 @@ namespace FlightsAPITests.Services
                 },
             };
 
-            // Act
-            var result = _sut.GetTopFiveFlightDestinations();
+        // Act
+        var result = _sut.GetTopFiveFlightDestinations();
 
-            result.Should().BeEquivalentTo(expected);
-        }
+        result.Should().BeEquivalentTo(expected);
+    }
 
-        [Fact]
-        public void GetTopFiveThrowsWhenDirectionIsNotSupported()
-        {
-            // Act
-            var result = () => _sut.TopFiveFlights("bla");
+    [Fact]
+    public void GetTopFiveThrowsWhenDirectionIsNotSupported()
+    {
+        // Act
+        var result = () => _sut.TopFiveFlights("bla");
 
-            // Assert
-            result.Should().Throw<ArgumentException>();
-        }
+        // Assert
+        result.Should().Throw<ArgumentException>();
+    }
 
-        [Fact]
-        public void GetTopFiveReturnsOrigins()
-        {
-            // Arrange
-            var flights = _fixture.CreateMany<Flight>().ToList();
-            _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
+    [Fact]
+    public void GetTopFiveReturnsOrigins()
+    {
+        // Arrange
+        var flights = _fixture.CreateMany<Flight>().ToList();
+        _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
 
-            // Act
-            _ = _sut.TopFiveFlights("origin");
+        // Act
+        _ = _sut.TopFiveFlights("origin");
 
-            // Assert
-            _flightsRepository.Verify(x => x.GetAll(), Times.Once);
-        }
+        // Assert
+        _flightsRepository.Verify(x => x.GetAll(), Times.Once);
+    }
 
-        [Fact]
-        public void GetTopFiveReturnsDestinations()
-        {
-            // Arrange
-            var flights = _fixture.CreateMany<Flight>().ToList();
-            _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
+    [Fact]
+    public void GetTopFiveReturnsDestinations()
+    {
+        // Arrange
+        var flights = _fixture.CreateMany<Flight>().ToList();
+        _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
 
-            // Act
-            _ = _sut.TopFiveFlights("destination");
+        // Act
+        _ = _sut.TopFiveFlights("destination");
 
-            // Assert
-            _flightsRepository.Verify(x => x.GetAll(), Times.Once);
-        }
+        // Assert
+        _flightsRepository.Verify(x => x.GetAll(), Times.Once);
+    }
+
+    [Fact]
+    public void GetLongestFlightReturnsOk()
+    {
+        // Arrange
+        var flights = new List<Flight>
+            {
+                new()
+                {
+                    Id = 1,
+                    DepartureTime = new DateTime(2024, 01, 02, 10, 00, 00),
+                    ArrivalTime = new DateTime(2024, 01, 02, 11, 00, 00),
+                    Origin = "Origin1",
+                    Destination = "Destination1",
+                    PlaneId = 1
+                },
+                new()
+                {
+                    Id = 2,
+                    DepartureTime = new DateTime(2024, 01, 02, 10, 00, 00),
+                    ArrivalTime = new DateTime(2024, 01, 02, 12, 00, 00),
+                    Origin = "Origin2",
+                    Destination = "Destination2",
+                    PlaneId = 2
+                },
+            };
+
+        _flightsRepository.Setup(x => x.GetAll()).Returns(flights);
+
+        // Act
+        var result = _sut.GetLongestFlight();
+
+        // Assert
+        result.Should().Be(flights[1]);
     }
 }

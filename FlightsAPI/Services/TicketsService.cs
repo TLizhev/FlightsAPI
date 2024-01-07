@@ -2,77 +2,76 @@
 using FlightsAPI.Application.Interfaces.Services;
 using FlightsAPI.Domain.Models;
 
-namespace FlightsAPI.Services
+namespace FlightsAPI.Services;
+
+public class TicketsService : ITicketsService
 {
-    public class TicketsService : ITicketsService
+    private readonly ITicketsRepository _ticketRepository;
+    private readonly IPassengersRepository _passengersRepository;
+
+    public TicketsService(ITicketsRepository ticketRepository, IPassengersRepository passengersRepository)
     {
-        private readonly ITicketsRepository _ticketRepository;
-        private readonly IPassengersRepository _passengersRepository;
+        _ticketRepository = ticketRepository;
+        _passengersRepository = passengersRepository;
+    }
 
-        public TicketsService(ITicketsRepository ticketRepository, IPassengersRepository passengersRepository)
+    public List<Ticket> GetTickets()
+    {
+        return _ticketRepository.GetAll();
+    }
+
+    public Ticket GetTicket(int id)
+    {
+        return _ticketRepository.GetById(id) ??
+               throw new InvalidOperationException("A ticket with this id does not exist.");
+    }
+
+    public List<FrequentFliersDto> FrequentFliers()
+    {
+        var results = new List<FrequentFliersDto>();
+        var passengerIds = _ticketRepository.GetAll().Select(x => x.PassengerId).ToList();
+        var keyValuePairs = passengerIds.GroupBy(x => x)
+            .ToDictionary(x => x.Key, x => x.Select(y => y)
+                .Count()).Take(5).OrderByDescending(x => x.Value);
+
+        foreach (var keyValuePair in keyValuePairs)
         {
-            _ticketRepository = ticketRepository;
-            _passengersRepository = passengersRepository;
+            var passenger = _passengersRepository.GetAll().FirstOrDefault(x => x.Id == keyValuePair.Key);
+
+            var fullName = passenger!.FirstName + " " + passenger.LastName;
+            results.Add(new FrequentFliersDto { FullName = fullName, Tickets = keyValuePair.Value });
         }
 
-        public List<Ticket> GetTickets()
-        {
-            return _ticketRepository.GetAll();
-        }
+        return results;
+    }
 
-        public Ticket GetTicket(int id)
-        {
-            return _ticketRepository.GetById(id) ??
-                   throw new InvalidOperationException("A ticket with this id does not exist.");
-        }
+    public async Task AddTicket(Ticket newTicket)
+    {
+        var ticket = _ticketRepository.GetById(newTicket.Id);
 
-        public List<FrequentFliersDto> FrequentFliers()
-        {
-            var results = new List<FrequentFliersDto>();
-            var passengerIds = _ticketRepository.GetAll().Select(x => x.PassengerId).ToList();
-            var keyValuePairs = passengerIds.GroupBy(x => x)
-                .ToDictionary(x => x.Key, x => x.Select(y => y)
-                    .Count()).Take(5).OrderByDescending(x => x.Value);
+        if (ticket is not null)
+            throw new InvalidOperationException("This passenger already exists.");
 
-            foreach (var keyValuePair in keyValuePairs)
-            {
-                var passenger = _passengersRepository.GetAll().FirstOrDefault(x => x.Id == keyValuePair.Key);
+        await _ticketRepository.AddAsync(newTicket);
+    }
 
-                var fullName = passenger!.FirstName + " " + passenger.LastName;
-                results.Add(new FrequentFliersDto { FullName = fullName, Tickets = keyValuePair.Value });
-            }
+    public void UpdateTicket(Ticket newTicket)
+    {
+        var ticket = _ticketRepository.GetById(newTicket.Id);
 
-            return results;
-        }
+        if (ticket is null)
+            throw new InvalidOperationException("Passenger with this id does not exist.");
 
-        public async Task AddTicket(Ticket newTicket)
-        {
-            var ticket = _ticketRepository.GetById(newTicket.Id);
+        _ticketRepository.Update(newTicket);
+    }
 
-            if (ticket is not null)
-                throw new InvalidOperationException("This passenger already exists.");
+    public void DeleteTicket(int id)
+    {
+        var ticket = _ticketRepository.GetById(id);
 
-            await _ticketRepository.AddAsync(newTicket);
-        }
+        if (ticket is null)
+            throw new InvalidOperationException("Passenger with this id does not exist.");
 
-        public void UpdateTicket(Ticket newTicket)
-        {
-            var ticket = _ticketRepository.GetById(newTicket.Id);
-
-            if (ticket is null)
-                throw new InvalidOperationException("Passenger with this id does not exist.");
-
-            _ticketRepository.Update(newTicket);
-        }
-
-        public void DeleteTicket(int id)
-        {
-            var ticket = _ticketRepository.GetById(id);
-
-            if (ticket is null)
-                throw new InvalidOperationException("Passenger with this id does not exist.");
-
-            _ticketRepository.Delete(ticket);
-        }
+        _ticketRepository.Delete(ticket);
     }
 }
