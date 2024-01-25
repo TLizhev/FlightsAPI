@@ -1,7 +1,7 @@
 using FlightsAPI.Application.Interfaces.Repositories;
 using FlightsAPI.Application.Interfaces.Services;
 using FlightsAPI.Infra;
-using FlightsAPI.Repositories;
+using FlightsAPI.Infra.Repositories;
 using FlightsAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);

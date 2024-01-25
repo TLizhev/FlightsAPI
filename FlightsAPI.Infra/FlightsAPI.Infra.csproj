@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FlightsAPI.Application\FlightsAPI.Application.csproj" />
     <ProjectReference Include="..\FlightsAPI.Domain\FlightsAPI.Domain.csproj" />
   </ItemGroup>
 

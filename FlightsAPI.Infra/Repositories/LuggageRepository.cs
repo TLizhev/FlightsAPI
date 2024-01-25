@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FlightsAPI.Application.Interfaces.Repositories;
 using FlightsAPI.Domain.Models;
-using FlightsAPI.Infra;
 
-namespace FlightsAPI.Repositories;
+namespace FlightsAPI.Infra.Repositories;
 
 [ExcludeFromCodeCoverage]
 public class LuggageRepository : ILuggageRepository
