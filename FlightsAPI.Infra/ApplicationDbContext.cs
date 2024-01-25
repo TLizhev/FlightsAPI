@@ -20,10 +20,11 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Passenger> Passengers { get; set; } = null!;
     public DbSet<Plane> Planes { get; set; } = null!;
     public DbSet<Ticket> Tickets { get; set; } = null!;
+    public DbSet<CabinCrew> CabinCrews { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(
-            "Server=.;Database=Airport;Trusted_Connection=True;MultipleActiveResultSets=true");
+            "Server=.;Database=Airport;Trusted_Connection=True;MultipleActiveResultSets=true", b => b.MigrationsAssembly("FlightsAPI"));
     }
 }
