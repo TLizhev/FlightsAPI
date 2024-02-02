@@ -29,8 +29,7 @@ public class PassengerController : ControllerBase
         return Ok(passengers);
     }
 
-    [HttpGet]
-    [Route("{id:int}")]
+    [HttpGet("{id:int}", Name = "GetPassenger")]
     [ProducesResponseType(typeof(Passenger), 200)]
     [ProducesResponseType(404)]
     public IActionResult GetPassenger(int id)
@@ -68,7 +67,7 @@ public class PassengerController : ControllerBase
             };
 
             await _passengersService.AddPassenger(passenger);
-            return CreatedAtRoute("GetFlight", new { flightId = passenger.Id }, passenger);
+            return CreatedAtRoute("GetFlight", new { id = passenger.Id }, passenger);
         }
         catch (Exception e)
         {

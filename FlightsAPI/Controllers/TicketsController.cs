@@ -29,8 +29,7 @@ public class TicketsController : ControllerBase
         return Ok(tickets);
     }
 
-    [HttpGet]
-    [Route("{id:int}")]
+    [HttpGet("{id:int}", Name = "GetTicket")]
     [ProducesResponseType(typeof(Ticket), 200)]
     [ProducesResponseType(404)]
     public IActionResult GetTicket(int id)
@@ -74,7 +73,7 @@ public class TicketsController : ControllerBase
             };
 
             await _ticketsService.AddTicket(ticket);
-            return CreatedAtRoute("GetTicket", new { tickedId = ticket.Id }, ticket);
+            return CreatedAtRoute("GetTicket", new { id = ticket.Id }, ticket);
         }
         catch (Exception e)
         {

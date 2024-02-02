@@ -14,4 +14,5 @@ public class Endpoints
     public const string FrequentFliersEndpoint = "frequentFliers";
     public const string BaseDiscountsEndpoint = "discounts";
     public const string LongestFlightEndpoint = "longest";
+    public const string BaseCabinCrewRoute = "cabinCrew";
 }

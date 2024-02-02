@@ -29,8 +29,7 @@ public class LuggageController : ControllerBase
         return Ok(luggage);
     }
 
-    [HttpGet]
-    [Route("{id:int}")]
+    [HttpGet("{id:int}", Name = "GetLuggage")]
     [ProducesResponseType(typeof(Luggage), 200)]
     [ProducesResponseType(404)]
     public IActionResult GetLuggage(int id)

@@ -1,7 +1,6 @@
 ﻿using FlightsAPI.Application.Interfaces.Services;
 using FlightsAPI.Data;
 using FlightsAPI.Domain.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightsAPI.Controllers;
@@ -30,8 +29,7 @@ public class FlightsController : ControllerBase
         return Ok(flights);
     }
 
-    [HttpGet]
-    [Route("{id:int}")]
+    [HttpGet("{id:int}", Name = "GetFlight")]
     [ProducesResponseType(typeof(Flight), 200)]
     [ProducesResponseType(404)]
     public IActionResult GetFlight(int id)
@@ -68,7 +66,6 @@ public class FlightsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(Flight), 201)]
     [ProducesResponseType(400)]
-    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> AddFlight(
         string origin,
         string destination,
@@ -88,7 +85,7 @@ public class FlightsController : ControllerBase
             };
 
             await _flightService.AddFlight(flight);
-            return CreatedAtRoute("GetFlight", new { flightId = flight.Id }, flight);
+            return CreatedAtRoute("GetFlight", new { id = flight.Id }, flight);
         }
         catch (Exception e)
         {

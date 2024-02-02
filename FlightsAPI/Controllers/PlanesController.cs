@@ -29,8 +29,7 @@ public class PlanesController : ControllerBase
         return Ok(planes);
     }
 
-    [HttpGet]
-    [Route("{id:int}")]
+    [HttpGet("{id:int}", Name = "GetPlane")]
     [ProducesResponseType(typeof(Plane), 200)]
     [ProducesResponseType(404)]
     public IActionResult GetPlane(int id)
@@ -77,7 +76,7 @@ public class PlanesController : ControllerBase
             };
 
             await _planesService.AddPlane(plane);
-            return CreatedAtRoute("GetPlane", new { planeId = plane.Id }, plane);
+            return CreatedAtRoute("GetPlane", new { id = plane.Id }, plane);
         }
         catch (Exception e)
         {
